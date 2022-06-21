@@ -30,10 +30,14 @@ head(atp22)
 ```
 
 We can clean this up a little bit. Get rid of the empty columns.
+Also, (you'll thank me for this later!) get rid of non-breaking spaces in the player names.
 
-```{r}
+```{r message = F}
+library(dplyr)
 clean_elo <- function(tbl) {
-  tbl[, nchar(colnames(tbl)) > 0]
+  tbl <- tbl[, nchar(colnames(tbl)) > 0]
+  mutate(tbl, across(where(is.character),
+                     ~ stringr::str_replace_all(.x, '\\s', ' ')))
 }
 
 clean_elo(atp22) %>% head()

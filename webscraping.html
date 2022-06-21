@@ -388,21 +388,26 @@ head(atp22)</code></pre>
 ## 6     6 Stefanos T~  23.8 2058. NA    1899.1  2040.2  1572.4   NA    1979. 2049.
 ## # ... with 5 more variables: gElo &lt;dbl&gt;,  &lt;lgl&gt;, Peak Match &lt;chr&gt;,
 ## #   Peak Age &lt;dbl&gt;, Peak Elo &lt;dbl&gt;</code></pre>
-<p>We can clean this up a little bit. Get rid of the empty columns.</p>
-<pre class="r"><code>clean_elo &lt;- function(tbl) {
-  tbl[, nchar(colnames(tbl)) &gt; 0]
+<p>We can clean this up a little bit. Get rid of the empty columns.
+Also, (you’ll thank me for this later!) get rid of non-breaking spaces
+in the player names.</p>
+<pre class="r"><code>library(dplyr)
+clean_elo &lt;- function(tbl) {
+  tbl &lt;- tbl[, nchar(colnames(tbl)) &gt; 0]
+  mutate(tbl, across(where(is.character),
+                     ~ stringr::str_replace_all(.x, &#39;\\s&#39;, &#39; &#39;)))
 }
 
 clean_elo(atp22) %&gt;% head()</code></pre>
 <pre><code>## # A tibble: 6 x 13
 ##    Rank Player              Age   Elo HardRaw ClayRaw GrassRaw  hElo  cElo  gElo
 ##   &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     1 Carlos Alcaraz     19   2200. 2028.5  2038.1  1441.4   2114. 2119. 1821.
-## 2     2 Novak Djokovic     35   2169. 2054.9  2022.3  1942.4   2112. 2095. 2056.
-## 3     3 Alexander Zverev   25.1 2131. 2012.7  2043.9  1671.4   2072  2088. 1901.
-## 4     4 Rafael Nadal       36   2096. 1934.9  1967.6  1500.0   2015. 2032. 1798.
-## 5     5 Jannik Sinner      20.8 2070  1969.9  1896.4  1312.8   2020  1983. 1691.
-## 6     6 Stefanos Tsitsip~  23.8 2058. 1899.1  2040.2  1572.4   1979. 2049. 1815.
+## 1     1 Carlos Alcaraz     19   2200. 2028.5  2038.1  1441.4   2114. 2119. 1821.
+## 2     2 Novak Djokovic     35   2169. 2054.9  2022.3  1942.4   2112. 2095. 2056.
+## 3     3 Alexander Zverev   25.1 2131. 2012.7  2043.9  1671.4   2072  2088. 1901.
+## 4     4 Rafael Nadal       36   2096. 1934.9  1967.6  1500.0   2015. 2032. 1798.
+## 5     5 Jannik Sinner      20.8 2070  1969.9  1896.4  1312.8   2020  1983. 1691.
+## 6     6 Stefanos Tsitsip~  23.8 2058. 1899.1  2040.2  1572.4   1979. 2049. 1815.
 ## # ... with 3 more variables: Peak Match &lt;chr&gt;, Peak Age &lt;dbl&gt;, Peak Elo &lt;dbl&gt;</code></pre>
 <pre class="r"><code>download_elo2 &lt;- function(url)
   download_elo(url) %&gt;% clean_elo()</code></pre>
@@ -419,33 +424,33 @@ scores.</p>
 <pre><code>## # A tibble: 6 x 13
 ##    Rank Player              Age   Elo HardRaw ClayRaw GrassRaw  hElo  cElo  gElo
 ##   &lt;int&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     1 Novak Djokovic     34   2160. 2043.5  2036.0  1918.4   2102. 2098  2039.
-## 2     2 Rafael Nadal       35   2137. 1933.9  2075.9  1588.0   2036. 2106. 1863.
-## 3     3 Stefanos Tsitsip~  22.8 2121. 1937.3  2030.7  1575.5   2029. 2076  1848.
-## 4     4 Daniil Medvedev    25.3 2080. 2060.1  1713.9  1610.6   2070  1897. 1845.
-## 5     5 Alexander Zverev   24.2 2043. 1938.9  1999.1  1633.1   1991  2021. 1838.
-## 6     6 Andrey Rublev      23.6 2040. 1979.7  1827.2  1642.9   2010. 1934. 1841.
+## 1     1 Novak Djokovic     34   2160. 2043.5  2036.0  1918.4   2102. 2098  2039.
+## 2     2 Rafael Nadal       35   2137. 1933.9  2075.9  1588.0   2036. 2106. 1863.
+## 3     3 Stefanos Tsitsip~  22.8 2121. 1937.3  2030.7  1575.5   2029. 2076  1848.
+## 4     4 Daniil Medvedev    25.3 2080. 2060.1  1713.9  1610.6   2070  1897. 1845.
+## 5     5 Alexander Zverev   24.2 2043. 1938.9  1999.1  1633.1   1991  2021. 1838.
+## 6     6 Andrey Rublev      23.6 2040. 1979.7  1827.2  1642.9   2010. 1934. 1841.
 ## # ... with 3 more variables: Peak Match &lt;chr&gt;, Peak Age &lt;dbl&gt;, Peak Elo &lt;dbl&gt;</code></pre>
 <pre class="r"><code>head(atp19)</code></pre>
 <pre><code>## # A tibble: 6 x 10
 ##    Rank Player    Age   Elo  Hard Clay  Grass `Peak Match` `Peak Age` `Peak Elo`
 ##   &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;
-## 1     1 Novak ~  32   2188  2085. 2062~ 1964~ 2016 Monte ~       28.9      2470 
+## 1     1 Novak ~  32   2188  2085. 2062~ 1964~ 2016 Monte ~       28.9      2470 
 ## 2     2 Rafael~  33   2183. 1974. 2148~ 1608~ 2009 Madrid~       22.9      2368.
-## 3     3 Roger ~  37.9 2180. 2073. 1824~ 1912~ 2007 Indian~       25.6      2378.
+## 3     3 Roger ~  37.9 2180. 2073. 1824~ 1912~ 2007 Indian~       25.6      2378.
 ## 4     4 Domini~  25.7 2062  1885. 2033~ 1622~ 2016 Halle ~       22.8      2123 
 ## 5     5 Stefan~  20.8 2001. 1878. 1914~ 1560~ 2019 Roland~       20.8      2050.
-## 6     6 Kei Ni~  29.4 1998. 1888  1926~ 1737~ 2016 US Ope~       26.7      2210</code></pre>
+## 6     6 Kei Ni~  29.4 1998. 1888  1926~ 1737~ 2016 US Ope~       26.7      2210</code></pre>
 <pre class="r"><code>head(atp18)</code></pre>
 <pre><code>## # A tibble: 6 x 10
 ##    Rank Player    Age   Elo  Hard  Clay Grass `Peak Match` `Peak Age` `Peak Elo`
 ##   &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;
 ## 1     1 Rafael~  32   2222. 2011. 2252  1636. 2009 Madrid~       22.9      2388.
-## 2     2 Roger ~  36.9 2150. 2064. 1748. 1908  2007 Indian~       25.6      2406.
-## 3     3 Novak ~  31.1 2103. 2068. 2057. 1941. 2016 Monte ~       28.9      2460.
-## 4     4 Juan M~  29.7 2098. 2022. 1869  1614. 2009 Tokyo ~       21        2257.
+## 2     2 Roger ~  36.9 2150. 2064. 1748. 1908  2007 Indian~       25.6      2406.
+## 3     3 Novak ~  31.1 2103. 2068. 2057. 1941. 2016 Monte ~       28.9      2460.
+## 4     4 Juan M~  29.7 2098. 2022. 1869  1614. 2009 Tokyo ~       21        2257.
 ## 5     5 Alexan~  21.2 2075. 1923. 2085. 1725. 2017 Cincin~       20.3      2137.
-## 6     6 Andy M~  31.1 2054. 2009. 1955. 1840. 2017 Doha F        29.6      2335.</code></pre>
+## 6     6 Andy M~  31.1 2054. 2009. 1955. 1840. 2017 Doha F        29.6      2335.</code></pre>
 <p>Save everything to file.</p>
 <pre class="r"><code>atp22 &lt;- clean_elo(atp22)
 write.csv(atp22, &#39;data/elo_ratings/atp22.csv&#39;, row.names = F)
