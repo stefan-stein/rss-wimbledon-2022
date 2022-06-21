@@ -448,19 +448,19 @@ scores.</p>
 ## 6     6 Andy M~  31.1 2054. 2009. 1955. 1840. 2017 Doha F        29.6      2335.</code></pre>
 <p>Save everything to file.</p>
 <pre class="r"><code>atp22 &lt;- clean_elo(atp22)
-write.csv(atp22, &#39;elo_ratings/atp22.csv&#39;, row.names = F)
-write.csv(atp21, &#39;elo_ratings/atp21.csv&#39;, row.names = F)
-write.csv(atp19, &#39;elo_ratings/atp19.csv&#39;, row.names = F)
-write.csv(atp18, &#39;elo_ratings/atp18.csv&#39;, row.names = F)</code></pre>
+write.csv(atp22, &#39;data/elo_ratings/atp22.csv&#39;, row.names = F)
+write.csv(atp21, &#39;data/elo_ratings/atp21.csv&#39;, row.names = F)
+write.csv(atp19, &#39;data/elo_ratings/atp19.csv&#39;, row.names = F)
+write.csv(atp18, &#39;data/elo_ratings/atp18.csv&#39;, row.names = F)</code></pre>
 <p>Don’t forget the womens’ tournament!</p>
 <pre class="r"><code>wta22 &lt;- download_elo2(&#39;https://tennisabstract.com/reports/wta_elo_ratings.html&#39;)
 wta21 &lt;- download_elo2(&#39;https://web.archive.org/web/20210624053134/https://tennisabstract.com/reports/wta_elo_ratings.html&#39;)
 wta19 &lt;- download_elo2(&#39;https://web.archive.org/web/20190627232139/https://tennisabstract.com/reports/wta_elo_ratings.html&#39;)
 wta18 &lt;- download_elo2(&#39;https://web.archive.org/web/20180629003041/https://tennisabstract.com/reports/wta_elo_ratings.html&#39;)</code></pre>
-<pre class="r"><code>write.csv(wta22, &#39;elo_ratings/wta22.csv&#39;, row.names = F)
-write.csv(wta21, &#39;elo_ratings/wta21.csv&#39;, row.names = F)
-write.csv(wta19, &#39;elo_ratings/wta19.csv&#39;, row.names = F)
-write.csv(wta18, &#39;elo_ratings/wta18.csv&#39;, row.names = F)</code></pre>
+<pre class="r"><code>write.csv(wta22, &#39;data/elo_ratings/wta22.csv&#39;, row.names = F)
+write.csv(wta21, &#39;data/elo_ratings/wta21.csv&#39;, row.names = F)
+write.csv(wta19, &#39;data/elo_ratings/wta19.csv&#39;, row.names = F)
+write.csv(wta18, &#39;data/elo_ratings/wta18.csv&#39;, row.names = F)</code></pre>
 
 
 

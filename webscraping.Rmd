@@ -63,10 +63,10 @@ Save everything to file.
 
 ```{r}
 atp22 <- clean_elo(atp22)
-write.csv(atp22, 'elo_ratings/atp22.csv', row.names = F)
-write.csv(atp21, 'elo_ratings/atp21.csv', row.names = F)
-write.csv(atp19, 'elo_ratings/atp19.csv', row.names = F)
-write.csv(atp18, 'elo_ratings/atp18.csv', row.names = F)
+write.csv(atp22, 'data/elo_ratings/atp22.csv', row.names = F)
+write.csv(atp21, 'data/elo_ratings/atp21.csv', row.names = F)
+write.csv(atp19, 'data/elo_ratings/atp19.csv', row.names = F)
+write.csv(atp18, 'data/elo_ratings/atp18.csv', row.names = F)
 ```
 
 Don't forget the womens' tournament!
@@ -79,8 +79,8 @@ wta18 <- download_elo2('https://web.archive.org/web/20180629003041/https://tenni
 ```
 
 ```{r}
-write.csv(wta22, 'elo_ratings/wta22.csv', row.names = F)
-write.csv(wta21, 'elo_ratings/wta21.csv', row.names = F)
-write.csv(wta19, 'elo_ratings/wta19.csv', row.names = F)
-write.csv(wta18, 'elo_ratings/wta18.csv', row.names = F)
+write.csv(wta22, 'data/elo_ratings/wta22.csv', row.names = F)
+write.csv(wta21, 'data/elo_ratings/wta21.csv', row.names = F)
+write.csv(wta19, 'data/elo_ratings/wta19.csv', row.names = F)
+write.csv(wta18, 'data/elo_ratings/wta18.csv', row.names = F)
 ```
