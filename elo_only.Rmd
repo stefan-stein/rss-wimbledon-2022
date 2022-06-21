@@ -1,0 +1,125 @@
+---
+title: "YOLO with Elo"
+author: David Selby
+date: June 2022
+output:
+  html_document:
+    df_print: kable
+---
+
+In this document we're interested in generating predictions for every pairing, using Elo scores alone.
+We don't expect this to do terribly well, but it's a baseline.
+
+![Geddit?](https://c.tenor.com/S9934lMEfOwAAAAC/tenor.gif)
+
+Let's read in the Elo ratings we downloaded from the Web.
+
+```{r}
+elo_m <- read.csv('data/elo_ratings/atp22.csv')
+head(elo_m)
+```
+
+According to the web site, the `gElo` column is a 50/50 average between the all-surfaces Elo score and the grass-only Elo score.
+That's their recommendation, though we may or may not follow it.
+
+We can convert Elo scores to Bradley--Terry abilities.
+Let \(a_i\) represent the Elo score of player \(i\).
+Then the probability that player \(i\) defeats player \(j\) (ignoring the possibility of a draw) is given by
+
+\[
+p_{ij} = 1 - \frac1{1 + 10^{(a_i - a_j)/400}} = \frac{10^{a_i/400}}{ 10^{a_i/400} + 10^{a_j/400}},
+\]
+so that
+\[
+\frac{p_{ij}}{p_{ji}} = \frac{10^{a_i/400}}{10^{a_j/400}},
+\]
+hence
+\[
+\ln \frac{p_{ij}}{p_{ji}} = a_i \frac{\ln 10}{400} - a_j \frac{\ln 10}{400}.
+\]
+Thus one can convert an Elo rating into a Bradley--Terry (log)-score by multiplying it by \(\frac1{400}\ln 10\).
+
+```{r}
+elo_prob <- function(a1, a2) {
+  1 / (1 + 10^((a2 - a1) / 400))
+}
+```
+
+So the probability that Carlos Alcaraz beats Novak Djokovic is
+
+```{r}
+elo_prob(elo_m[1, 'Elo'], elo_m[2, 'Elo'])
+```
+
+Now to make some predictions.
+Let's pull in the template with all the pairings.
+Watch out for non-Ascii letters! (Make sure to set the encoding to `UTF-8`.)
+
+```{r}
+template <- read.csv('submission-template.csv', encoding = 'UTF-8')
+head(template, 10)
+```
+
+Are all the male players in our table?
+
+```{r message=F}
+library(dplyr)
+men <- with(subset(template, Gender == 'M'),
+            union(player1_name, player2_name))
+```
+
+Watch out for encodings or invisible unicode characters (like non-breaking spaces) in data that's scraped from the web!
+
+I have fixed this in `webscraping.Rmd` so the following should now work.
+
+```{r}
+'novak djokovic' %in% men
+tolower(elo_m$Player[2])
+'novak djokovic' == tolower(elo_m$Player[2])
+```
+
+Or is it non-breaking spaces?
+
+```{r}
+stringi::stri_escape_unicode('novak djokovic')
+stringi::stri_escape_unicode(elo_m$Player[2])
+```
+
+Now, who in the submission template is missing from the scraped Elo ratings?
+
+```{r}
+men[!men %in% tolower(elo_m$Player)]
+```
+
+Are they really missing?
+
+```{r}
+library(stringr)
+str_subset(elo_m$Player, 'elix') # hyphens
+str_subset(elo_m$Player, 'amos') # double-barrelled name
+str_subset(elo_m$Player, 'oger')
+str_subset(elo_m$Player, 'won') # spacing
+str_subset(elo_m$Player, 'nnard') # hyphens
+```
+
+And now the same for women:
+
+```{r}
+elo_w <- read.csv('data/elo_ratings/wta22.csv')
+women <- with(subset(template, Gender == 'W'),
+              union(player1_name, player2_name))
+women[!women %in% tolower(elo_w$Player)]
+```
+
+Diagnose the issues:
+
+```{r}
+str_subset(elo_w$Player, 'arbi') # diacritics
+str_subset(elo_w$Player, 'auf')  # different forename?
+str_subset(elo_w$Player, 'orne') # diacritics
+str_subset(elo_w$Player, 'a ?[Gg]abr') # hyphenation
+str_subset(elo_w$Player, 'elia') # hyphenation
+str_subset(elo_w$Player, 'in ?[Yy]u') # spacing
+```
+
+
