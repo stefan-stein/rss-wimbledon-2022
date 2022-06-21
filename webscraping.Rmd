@@ -1,0 +1,86 @@
+---
+title: "Download Elo ratings"
+author: "David Selby"
+date: '2022-06-21'
+output:
+  html_document:
+    default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a function that downloads the Elo ratings table from https://tennisabstract.com/reports/atp_elo_ratings.html (or WebArchive versions thereof).
+
+```{r}
+library(rvest)
+download_elo <- function(url) {
+  read_html(url) %>%
+    html_element('#reportable') %>%
+    html_table()
+}
+```
+
+Example:
+
+```{r}
+atp22 <- download_elo('https://tennisabstract.com/reports/atp_elo_ratings.html')
+head(atp22)
+```
+
+We can clean this up a little bit. Get rid of the empty columns.
+
+```{r}
+clean_elo <- function(tbl) {
+  tbl[, nchar(colnames(tbl)) > 0]
+}
+
+clean_elo(atp22) %>% head()
+
+download_elo2 <- function(url)
+  download_elo(url) %>% clean_elo()
+```
+
+And get some historic data from the Web Archive.
+
+```{r}
+atp21 <- download_elo2('https://web.archive.org/web/20210624053134/https://tennisabstract.com/reports/atp_elo_ratings.html')
+atp19 <- download_elo2('https://web.archive.org/web/20190627232139/https://tennisabstract.com/reports/atp_elo_ratings.html')
+atp18 <- download_elo2('https://web.archive.org/web/20180629003041/https://tennisabstract.com/reports/atp_elo_ratings.html')
+```
+
+I would combine these into one big table with a column for 'year', but they changed the names of the columns slightly from one year to another.
+If we are interested in 'grass Elo' then it might be worth checking what the difference is between the 'raw grass' and 'gElo' scores.
+
+```{r}
+head(atp21)
+head(atp19)
+head(atp18)
+```
+
+Save everything to file.
+
+```{r}
+atp22 <- clean_elo(atp22)
+write.csv(atp22, 'elo_ratings/atp22.csv', row.names = F)
+write.csv(atp21, 'elo_ratings/atp21.csv', row.names = F)
+write.csv(atp19, 'elo_ratings/atp19.csv', row.names = F)
+write.csv(atp18, 'elo_ratings/atp18.csv', row.names = F)
+```
+
+Don't forget the womens' tournament!
+
+```{r}
+wta22 <- download_elo2('https://tennisabstract.com/reports/wta_elo_ratings.html')
+wta21 <- download_elo2('https://web.archive.org/web/20210624053134/https://tennisabstract.com/reports/wta_elo_ratings.html')
+wta19 <- download_elo2('https://web.archive.org/web/20190627232139/https://tennisabstract.com/reports/wta_elo_ratings.html')
+wta18 <- download_elo2('https://web.archive.org/web/20180629003041/https://tennisabstract.com/reports/wta_elo_ratings.html')
+```
+
+```{r}
+write.csv(wta22, 'elo_ratings/wta22.csv', row.names = F)
+write.csv(wta21, 'elo_ratings/wta21.csv', row.names = F)
+write.csv(wta19, 'elo_ratings/wta19.csv', row.names = F)
+write.csv(wta18, 'elo_ratings/wta18.csv', row.names = F)
+```
