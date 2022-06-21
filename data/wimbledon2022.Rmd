@@ -1,0 +1,298 @@
+---
+title: "Stein's method"
+author:
+  - Ian Hamilton
+  - Stefan Stein
+date: June 2022
+output:
+  html_document:
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, echo = TRUE)
+```
+
+Libraries.
+
+```{r}
+library(tidyverse)
+library(igraph)
+```
+
+
+```{r}
+df_2018 <- read_csv("Men 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter((Tournament != "Wimbledon") | (Tournament == "Wimbledon" & Round == "1st Round"))%>%
+  select(Date, Tournament, Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji))%>%
+  rowwise()%>%
+  mutate(
+    sorted = paste(sort(c(Winner, Loser)), collapse = '_'),
+    origin = ifelse(Tournament == "Wimbledon", 0, 1)
+  )%>%
+  group_by(sorted)%>%
+  arrange(origin, desc(Date),.by_group = TRUE)%>%
+  slice_head(n=1)%>%
+  ungroup()
+  # arrange(sorted)
+
+df_2019 <- read_csv("Men 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter((Tournament != "Wimbledon") | (Tournament == "Wimbledon" & Round == "1st Round"))%>%
+  select(Date, Tournament, Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji))%>%
+  rowwise()%>%
+  mutate(
+    sorted = paste(sort(c(Winner, Loser)), collapse = '_'),
+    origin = ifelse(Tournament == "Wimbledon", 0, 1)
+  )%>%
+  group_by(sorted)%>%
+  # mutate(num_matches = n())%>%
+  arrange(origin, desc(Date),.by_group = TRUE)%>%
+  slice_head(n=1)%>%
+  ungroup()
+  # arrange(sorted)
+
+df_2021 <- read_csv("Men 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter((Tournament != "Wimbledon") | (Tournament == "Wimbledon" & Round == "1st Round"))%>%
+  select(Date, Tournament, Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji))%>%
+  rowwise()%>%
+  mutate(
+    sorted = paste(sort(c(Winner, Loser)), collapse = '_'),
+    origin = ifelse(Tournament == "Wimbledon", 0, 1)
+  )%>%
+  group_by(sorted)%>%
+  # mutate(num_matches = n())%>%
+  arrange(origin, desc(Date),.by_group = TRUE)%>%
+  slice_head(n=1)%>%
+  ungroup()
+  # arrange(sorted)
+
+```
+
+
+# Fitting model
+
+
+```{r}
+makeX_lm <- function(df){
+  all_players <- c(as.character(df$Winner), as.character(df$Loser))%>%
+    factor()%>%
+    levels()
+  X_lm <- matrix(0,
+                 nrow(df),
+                 length(all_players))
+  colnames(X_lm) <- all_players
+  for (team in colnames(X_lm)) {
+    X_lm[df$Winner == team, team] <- 1
+    X_lm[df$Loser == team, team] <- -1
+  }
+  return(X_lm)
+}
+```
+
+```{r}
+df_2018$X <- makeX_lm(df_2018)
+df_2019$X <- makeX_lm(df_2019)
+df_2021$X <- makeX_lm(df_2021)
+```
+
+
+```{r}
+w <- 1.5
+fitLM <- function(df, w){
+  weights <- df%>%
+    mutate(weight = ifelse(Tournament == "Wimbledon", w, 1))%>%
+    pull(weight)
+  
+  lmfit_group <- lm(logit_p_ij ~ -1 + X, data = df, weights = weights)
+  r <- coef(lmfit_group)
+  r[is.na(r)] <- 0
+  names(r) <- substring(names(r), 2)
+  return(r)
+  # s <- exp(r)
+}
+```
+
+```{r}
+rs <- lapply(list(df_2018,df_2019,df_2021), fitLM, w=w)
+```
+
+
+
+
+```{r}
+summary(lmfit_group)
+```
+
+
+# Optimizing
+
+Define the loss function. Load validation data (later Wimbledon rounds).
+
+```{r}
+wim2018 <- read_csv("wimbledon M 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Round != "1st Round")
+wim2019 <- read_csv("wimbledon M 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Round != "1st Round")
+wim2021 <- read_csv("wimbledon M 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Round != "1st Round")
+wimlist <- list(wim2018,wim2019,wim2021)
+```
+
+```{r}
+wim2018score <- wim2018%>%
+  rowwise()%>%
+  mutate(
+    winner_lambda = rs[[1]][Winner],
+    loser_lambda = rs[[1]][Loser],
+    prob_winner_win = plogis(winner_lambda - loser_lambda),
+    log_prob = log(prob_winner_win)
+  )%>%
+  pull(log_prob)%>%
+  sum()
+
+wim2019score <- wim2019%>%
+  rowwise()%>%
+  mutate(
+    winner_lambda = rs[[2]][Winner],
+    loser_lambda = rs[[2]][Loser],
+    prob_winner_win = plogis(winner_lambda - loser_lambda),
+    log_prob = log(prob_winner_win)
+  )%>%
+  pull(log_prob)%>%
+  sum()
+
+wim2021score <- wim2021%>%
+  rowwise()%>%
+  mutate(
+    winner_lambda = rs[[3]][Winner],
+    loser_lambda = rs[[3]][Loser],
+    prob_winner_win = plogis(winner_lambda - loser_lambda),
+    log_prob = log(prob_winner_win)
+  )%>%
+  pull(log_prob)%>%
+  sum()
+```
+
+
+
+```{r}
+getScore <- function(w){
+  rs <- lapply(list(df_2018,df_2019,df_2021), fitLM, w=w)
+  score <- 0
+  for (i in 1:3) {
+    lambdas <- rs[[i]]
+    wim <- wimlist[[i]]
+    score_i <- wim%>%
+      rowwise()%>%
+      mutate(
+        winner_lambda = lambdas[Winner],
+        loser_lambda = lambdas[Loser],
+        prob_winner_win = plogis(winner_lambda - loser_lambda),
+        minus_log_prob = -log(prob_winner_win)
+      )%>%
+      pull(minus_log_prob)%>%
+      sum()
+    score <- score + score_i
+  }
+  return(score)
+}
+```
+
+
+```{r}
+w <- 1
+getScore(w)
+```
+
+
+```{r}
+res <- optimize(getScore,interval = c(0,1000))
+```
+
+
+```{r}
+res
+```
+
+```{r}
+ws <- seq(1,30,by=0.1)
+ys <- numeric()
+for (w in ws) {
+  y <- getScore(w)
+  ys <- c(ys,y)
+}
+
+```
+
+```{r}
+tibble(x = ws, y = ys)%>%
+  ggplot(aes(x=x,y=y)) +
+  # xlim(0.3,10) +
+  scale_y_log10() +
+  geom_line() +
+  geom_hline(yintercept = 108.6, color = "red")
+```
+
+# Final model
+
+```{r}
+w_opt <- 3
+
+```
+
+
+
+
+
+# Men submission format
+
+```{r}
+library(readxl)
+player_id_lookup <- read_excel("player_id_lookup.xlsx", 
+    sheet = "men")
+```
+
+
+```{r}
+transform_name <- function(name){
+  splitName <- str_split(name, " ")[[1]]
+  if (length(splitName) > 2){
+    return("")
+  }
+  lastName <- splitName[2]%>%str_to_title()
+  firstName <- splitName[1]%>%substr(start = 1, stop = 1)%>%toupper()%>%paste(".",sep = "")
+  return(paste(lastName,firstName))
+}
+
+player_id_lookup <- player_id_lookup%>%
+  rowwise()%>%
+  mutate(myName = transform_name(name))
+```
+
+
+```{r}
+template <- read_csv("submission-template.csv")%>%
+  filter(Gender == "M")
+```
+
