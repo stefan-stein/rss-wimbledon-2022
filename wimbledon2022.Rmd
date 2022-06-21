@@ -22,7 +22,7 @@ library(igraph)
 
 
 ```{r}
-df_2018 <- read_csv("Men 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+df_2018 <- read_csv("data/Men 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
   filter((Tournament != "Wimbledon") | (Tournament == "Wimbledon" & Round == "1st Round"))%>%
   select(Date, Tournament, Winner, Loser, AvgW, AvgL)%>%
   mutate(p_ij = 1 / AvgW,
@@ -43,7 +43,7 @@ df_2018 <- read_csv("Men 2018.csv", col_types = cols(Date = col_date(format = "%
   ungroup()
   # arrange(sorted)
 
-df_2019 <- read_csv("Men 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+df_2019 <- read_csv("data/Men 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
   filter((Tournament != "Wimbledon") | (Tournament == "Wimbledon" & Round == "1st Round"))%>%
   select(Date, Tournament, Winner, Loser, AvgW, AvgL)%>%
   mutate(p_ij = 1 / AvgW,
@@ -65,7 +65,7 @@ df_2019 <- read_csv("Men 2019.csv", col_types = cols(Date = col_date(format = "%
   ungroup()
   # arrange(sorted)
 
-df_2021 <- read_csv("Men 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+df_2021 <- read_csv("data/Men 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
   filter((Tournament != "Wimbledon") | (Tournament == "Wimbledon" & Round == "1st Round"))%>%
   select(Date, Tournament, Winner, Loser, AvgW, AvgL)%>%
   mutate(p_ij = 1 / AvgW,
@@ -141,7 +141,7 @@ rs <- lapply(list(df_2018,df_2019,df_2021), fitLM, w=w)
 
 
 ```{r}
-summary(lmfit_group)
+rs
 ```
 
 
@@ -150,11 +150,11 @@ summary(lmfit_group)
 Define the loss function. Load validation data (later Wimbledon rounds).
 
 ```{r}
-wim2018 <- read_csv("wimbledon M 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+wim2018 <- read_csv("data/wimbledon M 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
   filter(Round != "1st Round")
-wim2019 <- read_csv("wimbledon M 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+wim2019 <- read_csv("data/wimbledon M 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
   filter(Round != "1st Round")
-wim2021 <- read_csv("wimbledon M 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+wim2021 <- read_csv("data/wimbledon M 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
   filter(Round != "1st Round")
 wimlist <- list(wim2018,wim2019,wim2021)
 ```
@@ -258,7 +258,6 @@ tibble(x = ws, y = ys)%>%
 
 ```{r}
 w_opt <- 3
-
 ```
 
 
