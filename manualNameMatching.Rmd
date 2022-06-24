@@ -1,0 +1,317 @@
+---
+title: "Manual name matching"
+author:
+  - Ian Hamilton
+  - Stefan Stein
+  - David Selby
+date: June 2022
+output:
+  html_document:
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, echo = TRUE)
+```
+
+Open the Elo ranking and odds data, find names that cannot be matched automatically, do those for which Elo rankings exist in Excel.
+
+```{r}
+library(tidyverse)
+library(igraph)
+```
+
+
+```{r}
+transform_name <- function(name){
+  splitName <- str_split(name, " ")[[1]]
+  
+  lastName <- tail(splitName, n=1)%>%str_to_title()
+  firstName <- head(splitName, -1)%>%substr(start = 1, stop = 1)%>%toupper()%>%paste(".",sep = "")%>%paste(collapse = "")
+  
+  return(paste(lastName,firstName))
+}
+```
+
+
+# Men
+
+```{r}
+df_2018 <- read_csv("data/Men 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji),
+         lambda_w = 0.5*logit_p_ij,
+         lambda_l = -0.5*logit_p_ij)
+
+df_2019 <- read_csv("data/Men 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji),
+         lambda_w = 0.5*logit_p_ij,
+         lambda_l = -0.5*logit_p_ij)
+
+df_2021 <- read_csv("data/Men 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji),
+         lambda_w = 0.5*logit_p_ij,
+         lambda_l = -0.5*logit_p_ij)
+```
+
+
+```{r}
+atp18 <- read_csv("data/elo_ratings/atp18.csv")%>%
+  rowwise()%>%
+  mutate(myName = transform_name(Player))
+
+write_csv(atp18, 'data/elo_ratings/atp18_myname.csv')
+
+atp19 <- read_csv("data/elo_ratings/atp19.csv")%>%
+  rowwise()%>%
+  mutate(myName = transform_name(Player))
+
+write_csv(atp19, 'data/elo_ratings/atp19_myname.csv')
+```
+
+The csv file for 2021 is messed up and needs some manual edits first, hence it is in Excel.
+
+```{r}
+atp21 <- atp21_mod <- read_excel("data/elo_ratings/atp21_mod.xlsx", 
+    col_types = c("numeric", "text", "numeric", 
+        "text", "text", "text", "text", "text", 
+        "text"))%>%
+  rowwise()%>%
+  mutate(myName = transform_name(Player))
+
+write_csv(atp21, 'data/elo_ratings/atp21_myname.csv')
+```
+
+
+```{r}
+elo2018 <- df_2018%>%
+  left_join(
+    atp18%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+  )%>%
+  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  left_join(
+    atp18%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = "Elo", "PlayerL" = "Player")
+
+elo2019 <- df_2019%>%
+  left_join(
+    atp19%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+  )%>%
+  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  left_join(
+    atp19%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = "Elo", "PlayerL" = "Player")
+
+elo2021 <- df_2021%>%
+  left_join(
+    atp21%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+  )%>%
+  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  left_join(
+    atp21%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = "Elo", "PlayerL" = "Player")
+```
+
+
+Get the missing names
+
+
+```{r}
+missings2018 <- c(
+  elo2018%>%
+  filter(is.na(PlayerW))%>%
+  pull(Winner),
+   elo2018%>%
+  filter(is.na(PlayerL))%>%
+  pull(Loser)
+)%>%
+  unique()
+
+missings2019 <- c(
+  elo2019%>%
+  filter(is.na(PlayerW))%>%
+  pull(Winner),
+   elo2019%>%
+  filter(is.na(PlayerL))%>%
+  pull(Loser)
+)%>%
+  unique()
+
+missings2021 <- c(
+  elo2021%>%
+  filter(is.na(PlayerW))%>%
+  pull(Winner),
+   elo2021%>%
+  filter(is.na(PlayerL))%>%
+  pull(Loser)
+)%>%
+  unique()
+```
+
+
+
+# Women
+
+```{r}
+df_2018 <- read_csv("data/Women 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji),
+         lambda_w = 0.5*logit_p_ij,
+         lambda_l = -0.5*logit_p_ij)
+
+df_2019 <- read_csv("data/Women 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji),
+         lambda_w = 0.5*logit_p_ij,
+         lambda_l = -0.5*logit_p_ij)
+
+df_2021 <- read_csv("data/Women 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob) %>%
+  mutate(logit_p_ij = log(p_ij / p_ji),
+         lambda_w = 0.5*logit_p_ij,
+         lambda_l = -0.5*logit_p_ij)
+```
+
+
+```{r}
+wta18 <- read_csv("data/elo_ratings/wta18.csv")%>%
+  rowwise()%>%
+  mutate(myName = transform_name(Player))
+
+wta19 <- read_csv("data/elo_ratings/wta19.csv")%>%
+  rowwise()%>%
+  mutate(myName = transform_name(Player))
+
+write_csv(wta18, 'data/elo_ratings/wta18_myname.csv')
+write_csv(wta19, 'data/elo_ratings/wta19_myname.csv')
+
+```
+
+The csv file for 2021 is messed up and needs some manual edits first, hence it is in Excel.
+
+```{r, warning=FALSE}
+wta21 <- read_excel("data/elo_ratings/wta21_mod.xlsx", 
+    col_types = c("numeric", "text", "text", 
+        "numeric", "text", "text", "text", 
+        "text", "text", "text"))%>%
+  rowwise()%>%
+  mutate(myName = transform_name(Player))
+
+write_csv(wta21, 'data/elo_ratings/wta21_myname.csv')
+```
+
+
+```{r}
+elo2018 <- df_2018%>%
+  left_join(
+    wta18%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+  )%>%
+  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  left_join(
+    wta18%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = "Elo", "PlayerL" = "Player")
+
+elo2019 <- df_2019%>%
+  left_join(
+    wta19%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+  )%>%
+  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  left_join(
+    wta19%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = "Elo", "PlayerL" = "Player")
+
+elo2021 <- df_2021%>%
+  left_join(
+    wta21%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+  )%>%
+  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  left_join(
+    wta21%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = "Elo", "PlayerL" = "Player")
+```
+
+
+Get the missing names
+
+
+```{r}
+missings2018 <- c(
+  elo2018%>%
+  filter(is.na(PlayerW))%>%
+  pull(Winner),
+   elo2018%>%
+  filter(is.na(PlayerL))%>%
+  pull(Loser)
+)%>%
+  unique()
+
+missings2019 <- c(
+  elo2019%>%
+  filter(is.na(PlayerW))%>%
+  pull(Winner),
+   elo2019%>%
+  filter(is.na(PlayerL))%>%
+  pull(Loser)
+)%>%
+  unique()
+
+missings2021 <- c(
+  elo2021%>%
+  filter(is.na(PlayerW))%>%
+  pull(Winner),
+   elo2021%>%
+  filter(is.na(PlayerL))%>%
+  pull(Loser)
+)%>%
+  unique()
+```

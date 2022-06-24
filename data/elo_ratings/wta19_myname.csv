@@ -1,0 +1,268 @@
+Rank,Player,Age,Elo,Hard,Clay,Grass,Peak Match,Peak Age,Peak Elo,myName
+1,Ashleigh Barty,23.1,2178.7,2071.3,1858.3,1788.5,2019 Birmingham F,23.1,2173.2,Barty A.
+2,Simona Halep,27.7,2095.8,1980,1982.9,1709.5,2015 Stuttgart SF,23.6,2169.3,Halep S.
+3,Petra Kvitova,29.2,2057.6,1921.6,1893.9,1690.9,2012 Australian Open SF,21.9,2144.5,Kvitova P.
+4,Marketa Vondrousova,19.9,2028.3,1855.5,1863.9,1302.8,2019 Roland Garros F,19.9,2040.9,Vondrousova M.
+5,Karolina Pliskova,27.2,2025.9,1956.5,1834.6,1705.7,2018 Madrid SF,26.1,2062.6,Pliskova K.
+6,Naomi Osaka,21.7,2011.2,1922.8,1737.6,1592.2,2019 Dubai R32,21.3,2048.4,Osaka N.
+7,Kiki Bertens,27.5,2009.3,1829.6,1911.8,1639.7,2019 Rome SF,27.4,2027.6,Bertens K.
+8,Angelique Kerber,31.4,1988.7,1896.4,1800.5,1841.8,2016 Singapore F,28.8,2121.5,Kerber A.
+9,Johanna Konta,28.1,1987.3,1852,1797.4,1698.5,2017 Fed Cup WG2 R1,25.9,2068.2,Konta J.
+10,Elina Svitolina,24.8,1977.2,1956.1,1808.3,1482.7,2018 Roland Garros R32,23.7,2092,Svitolina E.
+11,Belinda Bencic,22.3,1956.8,1892.4,1674,1717.4,2016 St. Petersburg F,18.9,2105.2,Bencic B.
+12,Serena Williams,37.7,1949.2,1839.7,1705.1,1590.9,2003 Charleston F,21.5,2472.6,Williams S.
+13,Sloane Stephens,26.2,1944.3,1821,1834,1583.5,2017 Wuhan R64,24.5,1999.9,Stephens S.
+14,Victoria Azarenka,29.9,1943.5,1883.8,1726.9,1564.5,2013 Indian Wells R16,23.6,2307.5,Azarenka V.
+15,Madison Keys,24.3,1941.7,1833.3,1786.1,1662.3,2016 Olympics SF,21.5,2068.6,Keys M.
+16,Bianca Andreescu,18.9,1939.7,1857.5,1506.4,1473.5,2019 Miami R32,18.8,2021.8,Andreescu B.
+17,Garbine Muguruza,25.6,1937.6,1840.6,1876.6,1735.3,2017 US Open R16,23.9,2087.7,Muguruza G.
+18,Petra Martic,28.4,1929.4,1738.3,1805.1,1585.3,2019 Birmingham SF,28.4,1941.1,Martic P.
+19,Caroline Garcia,25.7,1925.1,1829.4,1755.4,1708.5,2017 Singapore RR,24,2023.4,Garcia C.
+20,Julia Goerges,30.6,1918,1833.4,1662.7,1687.2,2018 Charleston F,29.4,1994.3,Goerges J.
+21,Sofia Kenin,20.6,1915.6,1797.8,1501.5,1739.1,2019 Mallorca F,20.6,1896.4,Kenin S.
+22,Donna Vekic,23,1902.3,1747.3,1681.2,1638.3,2019 Nottingham F,22.9,1919.3,Vekic D.
+23,Anastasija Sevastova,29.2,1897.5,1806.8,1725.2,1642.9,2018 Moscow SF,28.5,1971.1,Sevastova A.
+24,Venus Williams,39,1896.8,1819.5,1552.1,1593.2,2002 US Open F,22.2,2415.5,Williams V.
+25,Amanda Anisimova,17.8,1891.7,1757.1,1728.2,1452.6,2019 Mallorca QF,17.8,1909.5,Anisimova A.
+26,Dayana Yastremska,19.1,1886.9,1855.4,1716.7,1431.2,2019 Dubai R64,18.8,1972.2,Yastremska D.
+27,Caroline Wozniacki,28.9,1886.8,1795.5,1685.2,1644.7,2011 Stuttgart F,20.8,2234.9,Wozniacki C.
+28,Anett Kontaveit,23.5,1877.6,1805.5,1745.9,1577.5,2017 Wimbledon R32,21.5,1971.7,Kontaveit A.
+29,Aryna Sabalenka,21.1,1865.2,1878.9,1539.9,1519.2,2018 Beijing QF,20.4,2064.8,Sabalenka A.
+30,Qiang Wang,27.4,1865.1,1864.1,1548,1417.5,2018 Hong Kong F,26.7,1965.6,Wang Q.
+31,Su Wei Hsieh,33.4,1853.8,1775.6,1572.1,1564.3,2019 Rabat QF,33.3,1887.5,Hsieh S.W.
+32,Dominika Cibulkova,30.1,1849,1788.2,1628.6,1656.5,2008 Beijing QF,19.4,2045,Cibulkova D.
+33,Camila Giorgi,27.2,1841.1,1727.8,1640.9,1637.6,2019 Australian Open R32,27,1904.5,Giorgi C.
+34,Darya Kasatkina,22.1,1841,1764,1724.2,1659.5,2018 Indian Wells F,20.8,2025.7,Kasatkina D.
+35,Aliaksandra Sasnovich,25.2,1840.6,1788.1,1501.9,1447.6,2019 Australian Open R32,24.8,1926.4,Sasnovich A.
+36,Yulia Putintseva,24.4,1836.6,1709.2,1689.8,1501.8,2019 Birmingham QF,24.4,1846.2,Putintseva Y.
+37,Lesia Tsurenko,30,1835.6,1804.6,1578.5,1503.1,2018 Brisbane F,29.6,1925.5,Tsurenko L.
+38,Maria Sakkari,23.9,1834.8,1614.9,1764.9,1486.2,2019 Rome SF,23.8,1869.5,Sakkari M.
+39,Elise Mertens,23.6,1834,1820.6,1696.9,1492.5,2018 Roland Garros R16,22.5,1972.1,Mertens E.
+40,Kaia Kanepi,34,1833.1,1782,1660.3,1466.8,2012 Roland Garros QF,27,1979.6,Kanepi K.
+41,Carla Suarez Navarro,30.7,1830,1767.4,1726.6,1519.4,2015 Rome F,26.7,2081,Navarro C.S.
+42,Iga Swiatek,18,1829.9,1616.4,1791,1562.6,2019 Birmingham R32,18,1862.4,Swiatek I.
+43,Danielle Rose Collins,25.5,1826.6,1767.7,1563.3,1356.4,2018 Miami SF,24.3,1903.2,Collins D.R.
+44,Barbora Zahlavova Strycova,33.2,1824.8,1716.6,1655.8,1700.3,2017 Australian Open R16,30.8,1937.3,Strycova B.Z.
+45,Karolina Muchova,22.8,1823.1,1755.7,1639.9,1349.7,2019 Prague F,22.7,1887.9,Muchova K.
+46,Monica Puig,25.7,1818.5,1703,1673.9,1483.4,2016 Tokyo QF,23,1920,Puig M.
+47,Anastasia Pavlyuchenkova,27.9,1815.6,1781.2,1667.6,1464.4,2011 Roland Garros QF,19.9,2042.6,Pavlyuchenkova A.
+48,Tamara Zidansek,21.4,1815.3,1524.6,1742.6,1360.4,2018 New Haven Qual,20.6,1807.3,Zidansek T.
+49,Margarita Gasparyan,24.8,1813.7,1710,1536.5,1459.8,2019 Madrid R64,24.7,1834.8,Gasparyan M.
+50,Kristina Mladenovic,26.1,1805.9,1623.7,1794.2,1578.8,2017 Roland Garros QF,24,1964.6,Mladenovic K.
+51,Ajla Tomljanovic,26.1,1803.1,1735.2,1585.2,1566.7,2019 Rabat SF,26,1844,Tomljanovic A.
+52,Katerina Siniakova,23.1,1799.5,1698.6,1684.8,1504.1,2017 Australian Open R128,20.7,1918.7,Siniakova K.
+53,Alison Riske,29,1787.3,1625.7,1447.2,1730.8,2017 Dubai R32,26.6,1849.2,Riske A.
+54,Ekaterina Makarova,30.7,1785.8,1704.9,1575.9,1584.3,2014 Wuhan R32,26.3,1998.6,Makarova E.
+55,Viktoria Kuzmova,21.1,1783.8,1734.7,1670.3,1344.2,2018 s-Hertogenbosch SF,20.1,1867.3,Kuzmova V.
+56,Jennifer Brady,24.2,1781.4,1690.9,1451.4,1522.9,2019 Birmingham R16,24.2,1784.2,Brady J.
+57,Veronika Kudermetova,22.1,1773.7,1605.7,1595,1548.6,2019 S-Hertogenbosch SF,22.1,1792.2,Kudermetova V.
+58,Jelena Ostapenko,22,1772.1,1621.7,1702.7,1718.4,2017 Wuhan SF,20.3,2001.9,Ostapenko J.
+59,Svetlana Kuznetsova,33.9,1771.6,1719.9,1614.2,1511.6,2007 Stuttgart SF,22.3,2191.8,Kuznetsova S.
+60,Magdalena Rybarikova,30.7,1770.7,1666.6,1490.3,1729.9,2017 Wimbledon SF,28.7,1911,Rybarikova M.
+61,Alison Van Uytvanck,25.2,1767.1,1722.4,1571.7,1541.9,2018 Montreal R32,24.4,1835.7,Uytvanck A.V.
+62,Polona Hercog,28.4,1766.5,1542.9,1689.9,1487.2,2009 Prague R16,18.5,1879.1,Hercog P.
+63,Monica Niculescu,31.7,1765.2,1669.4,1551.4,1565.7,2013 Indian Wells R64,25.4,1875.1,Niculescu M.
+64,Rebecca Peterson,23.9,1764.8,1667.7,1625.4,1438.9,2019 Australian Open R64,23.4,1803.8,Peterson R.
+65,Alize Cornet,29.4,1755.5,1665.5,1620.5,1413.3,2008 New Haven SF,18.6,2014.1,Cornet A.
+66,Andrea Petkovic,31.8,1744.5,1691.8,1608.1,1452.2,2011 Beijing F,24.1,2080.2,Petkovic A.
+67,Ysaline Bonaventure,24.8,1743.4,1692.3,1476.7,1506.0,2019 Rabat QF,24.7,1760.7,Bonaventure Y.
+68,Ekaterina Alexandrova,24.6,1740.6,1758.7,1489.6,1455.7,2019 Indian Wells R32,24.3,1843.6,Alexandrova E.
+69,Vera Zvonareva,34.7,1738.4,1705.8,1513.5,1580.4,2009 Miami R32,24.5,2169.7,Zvonareva V.
+70,Zarina Diyas,25.6,1738.2,1683,1526,1605.6,2015 Dubai R16,21.3,1827.5,Diyas Z.
+71,Daria Gavrilova,25.2,1734.6,1689,1622.7,1420.7,2017 Australian Open R16,22.9,1935.2,Gavrilova D.
+72,Shuai Zhang,30.4,1734.1,1737.1,1504.7,1288.2,2016 Honolulu F,27.8,1847.2,Zhang S.
+73,Tatjana Maria,31.8,1733.8,1628.2,1428.3,1720.5,2015 Cagnes sur Mer $100K F,27.7,1783.3,Maria T.
+74,Saisai Zheng,25.4,1732.6,1663,1534.7,1421.1,2018 Anning F,24.2,1790,Zheng S.
+75,Viktorija Golubic,26.6,1731.9,1759.5,1450.2,1436.4,2019 Indian Wells R128,26.4,1810.7,Golubic V.
+76,Kirsten Flipkens,33.4,1731.8,1630.4,1502,1624.4,2013 Toronto R16,27.6,1932.2,Flipkens K.
+77,Ons Jabeur,24.8,1731.6,1639.9,1535.5,1602.3,2018 Shenzhen R16,24.3,1809.4,Jabeur O.
+78,Kateryna Kozlova,25.3,1727.1,1573.1,1643,1328.9,2016 Kreuzlingen $50K SF,22,1778.3,Kozlova K.
+79,Yafan Wang,25.1,1725.1,1752.7,1257.5,1462.8,2019 Miami R16,24.9,1789.8,Wang Y.
+80,Taylor Townsend,23.1,1722.3,1593.6,1633.8,1281.4,2019 W100 Bonita Springs FL QF,23.1,1743.6,Townsend T.
+81,Natalia Vikhlyantseva,22.3,1713.9,1673.2,1505.6,1468.3,2017 St. Petersburg SF,20,1783.2,Vikhlyantseva N.
+82,Elena Rybakina,20,1711.1,1461.8,1458.1,1610.1,2019 S-Hertogenbosch SF,20,1717.8,Rybakina E.
+83,Katie Boulter,22.7,1710.9,1618.3,1220.4,1490.3,2019 Indian Wells Qual,22.6,1744.1,Boulter K.
+84,Bernarda Pera,24.5,1708.2,1546.1,1683.1,1424.1,2018 Madrid R16,23.4,1807.5,Pera B.
+85,Kristyna Pliskova,27.2,1705.6,1537.4,1571.1,1578.5,2018 Nurnberg QF,26.2,1792.2,Pliskova K.
+86,Sara Sorribes Tormo,22.7,1704.6,1543.5,1619.2,1479.5,2019 Mallorca R32,22.7,1716.8,Tormo S.S.
+87,Lauren Davis,25.7,1700.9,1588,1609.2,1425.1,2017 Indian Wells R16,23.4,1881.6,Davis L.
+88,Anastasia Potapova,18.2,1699.8,1616.9,1567.7,1412.1,2019 Budapest SF,17.9,1798.3,Potapova A.
+89,Jil Belen Teichmann,21.9,1699.2,1447.3,1631,1359.7,2019 Bol QF,21.9,1731.8,Teichmann J.B.
+90,Laura Siegemund,31.2,1699,1534.7,1621.5,1359.4,2016 Madrid R16,28.2,1896.7,Siegemund L.
+91,Timea Bacsinszky,30,1698.8,1620,1615.7,-,2015 Wimbledon QF,26.1,1996.7,Bacsinszky T.
+92,Greetje Minnen,21.8,1698.3,1495.5,1519.3,1483.8,2019 S-Hertogenbosch QF,21.8,1756.1,Minnen G.
+93,Eugenie Bouchard,25.2,1696,1624.3,1651,1537.2,2014 Wimbledon F,20.3,2029.8,Bouchard E.
+94,Anna Blinkova,20.8,1695,1577.3,1638.1,1465.2,2018 Monterrey R16,19.6,1759.9,Blinkova A.
+95,Sorana Cirstea,29.1,1694.7,1568.1,1631,1481.2,2009 US Open R32,19.4,1893.3,Cirstea S.
+96,Marta Kostyuk,17,1692.6,1576.8,1591.3,1432.4,2018 Stuttgart R16,15.8,1777.3,Kostyuk M.
+97,Samantha Stosur,35.2,1688.5,1574,1681.8,1508.9,2010 Roland Garros F,26.1,2129.1,Stosur S.
+98,Jessica Pegula,25.3,1688.1,1656.4,1429.2,1337.3,2019 Prague R16,25.2,1732.6,Pegula J.
+99,Sara Errani,32.1,1686.3,1668.4,1593.7,1337.4,2013 Roland Garros SF,26.1,2068.2,Errani S.
+100,Varvara Lepchenko,33.1,1686.2,1594.8,1566.4,1437.2,2015 Australian Open R32,28.7,1873.1,Lepchenko V.
+101,Barbora Krejcikova,23.5,1684.4,1373.7,1687.2,1249.6,2019 W60 Stare Splavy F,23.5,1669.4,Krejcikova B.
+102,Beatriz Haddad Maia,23,1681.7,1629,1554.9,1429.6,2017 Cincinnati R32,21.2,1821.6,Maia B.H.
+103,Mona Barthel,28.9,1679.4,1648.8,1524.5,1429.5,2012 Madrid R32,21.8,1983.3,Barthel M.
+104,Anna Karolina Schmiedlova,24.7,1675.8,1531.8,1566.6,1282.7,2015 Wuhan QF,21,1912.8,Schmiedlova A.K.
+105,Kristina Kucova,29.1,1675.4,1563.3,1570.2,1243.7,2016 Dubai $100K R32,26.6,1714.6,Kucova K.
+106,Aliona Bolsova,21.6,1672.6,1454.8,1612,1314.8,2019 Mallorca Qual,21.6,1710.6,Bolsova A.
+107,Irina Camelia Begu,28.8,1670.3,1554,1662.2,1357.1,2016 Roland Garros R16,25.7,1923.4,Begu I.C.
+108,Mihaela Buzarnescu,31.1,1669,1530.5,1531,1499.5,2018 Montreal R64,30.3,1943.2,Buzarnescu M.
+109,Timea Babos,26.1,1664.8,1617.8,1493.1,1444.0,2016 US Open R32,23.3,1849.5,Babos T.
+110,Kaja Juvan,18.6,1663.9,1299.2,1597.2,1565.3,2019 Mallorca R32,18.6,1690.1,Juvan K.
+111,Magda Linette,27.3,1663.7,1618.5,1430.3,1465.1,2018 Taipei QF,26,1754.6,Linette M.
+112,Caty Mcnally,17.6,1662.3,1599.9,1347,1506.3,2019 Indian Wells R128,17.3,1783.4,Mcnally C.
+113,Antonia Lottner,22.8,1657.9,1369.6,1599.1,1508.9,2016 Japan Open Tokyo Qual,20.1,1694.4,Lottner A.
+114,Vitalia Diatchenko,28.8,1654.6,1625.1,1439.7,1561.9,2014 Dubai 75K SF,24.3,1803.7,Diatchenko V.
+115,Luksika Kumkhum,25.9,1642.6,1633.6,1107.8,1385.6,2013 Kuala Lumpur QF,19.6,1763.5,Kumkhum L.
+116,Stefanie Voegele,29.3,1642.4,1586.4,1520.5,1255.3,2014 Australian Open R64,23.8,1841.7,Voegele S.
+117,Aleksandra Krunic,26.2,1641.6,1560.7,1534.9,1612.4,2018 Brisbane QF,24.8,1789.3,Krunic A.
+118,Elena Gabriela Ruse,21.6,1636.7,1468,1400.6,1622.2,2018 Prague R16,20.5,1689.5,Ruse E.G.
+119,Fiona Ferro,22.3,1636.5,1447.9,1568.6,1337.4,2019 Strasbourg QF,22.2,1688.7,Ferro F.
+120,Christina Mchale,27.1,1636.3,1591.8,1547.7,1423.2,2012 Indian Wells R16,19.8,1947.6,Mchale C.
+121,Paula Badosa,21.6,1633.5,1478.9,1543.2,1432.7,2019 W60 Burnie F,21.2,1678.6,Badosa P.
+122,Sachia Vickery,24.1,1631.9,1634.9,1348.1,1398.4,2018 Monterrey SF,22.9,1725.6,Vickery S.
+123,Pauline Parmentier,33.4,1630.9,1584.2,1519.2,1191.8,2007 Bratislava 1 100K R16,21.7,1782,Parmentier P.
+124,Allie Kiick,23.9,1626.9,1480.4,1584.6,1299.2,2018 Macon GA $80K SF,23.3,1622.7,Kiick A.
+125,Yanina Wickmayer,29.7,1623.5,1585.2,1419.2,1511.3,2010 Australian Open R16,20.2,2086.8,Wickmayer Y.
+126,Olga Govortsova,30.8,1622.7,1538.7,1508,1510.8,2009 Moscow F,21.2,1846.5,Govortsova O.
+127,Ana Bogdan,26.5,1619.7,1512.8,1535.3,1372.8,2018 New Haven R32,25.7,1776.4,Bogdan A.
+128,Whitney Osuigwe,17.2,1615.6,1574.8,1575.9,1250.9,2019 W100 Bonita Springs FL SF,17.1,1761.2,Osuigwe W.
+129,Johanna Larsson,30.8,1614.8,1531.2,1559.5,1348.0,2011 Dallas QF,23,1828.8,Larsson J.
+130,Jana Cepelova,26.1,1614.8,1606.6,1435.5,1510.1,2014 Charleston F,20.8,1808.6,Cepelova J.
+131,Anna Kalinskaya,20.5,1614.3,1552.5,1498.3,1461.1,2019 St. Petersburg Qual,20.2,1704.8,Kalinskaya A.
+132,Ivana Jorovic,22.1,1613.1,1651.3,1361.1,1218.1,2019 Monterrey R16,21.9,1709,Jorovic I.
+133,Madison Brengle,29.2,1611.7,1558.5,1522,1492.0,2016 Charleston R64,26,1829.6,Brengle M.
+134,Nicole Gibbs,26.2,1610.1,1559.7,1401.4,1338.4,2016 Miami R32,23,1786.2,Gibbs N.
+135,Astra Sharma,23.8,1606.5,1449.9,1493.6,1382.4,2019 Strasbourg R16,23.7,1682.1,Sharma A.
+136,Mandy Minella,33.5,1605.8,1512.8,1508.3,1364.0,2017 Monterrey R16,31.4,1655.8,Minella M.
+137,Francoise Abanda,22,1600.4,1523,1472.6,1401.3,2017 Quebec City QF,20.6,1678.3,Abanda F.
+138,Lara Arruabarrena,27.1,1598.5,1406.1,1579.1,1449.9,2013 Indian Wells R16,21,1791.6,Arruabarrena L.
+139,Veronica Cepede Royg,27.4,1597.5,1458.3,1551.9,1444.0,2018 Acapulco QF,26.1,1713.7,Royg V.C.
+140,Francesca Di Lorenzo,21.9,1594.8,1543.5,1499.3,1282.8,2019 Indian Wells 125K QF,21.6,1645.2,Lorenzo F.D.
+141,Heather Watson,27.1,1588.7,1493.4,1486,1503.3,2014 Eastbourne SF,22.1,1843,Watson H.
+142,Jasmine Paolini,23.4,1585.4,1355.8,1549,1264.8,2019 W60 Brescia F,23.4,1575.6,Paolini J.
+143,Rebecca Marino,28.4,1585.2,1476.4,1325.9,1394.6,2011 Nassau 100K SF,20.2,1827.1,Marino R.
+144,Lin Zhu,25.4,1584.9,1563.2,1105.1,1318.9,2019 Indian Wells R128,25.1,1681.4,Zhu L.
+145,Robin Anderson,26.2,1581.9,1544.9,1157.9,1432.5,2019 W60 Croissy Beaubourg F,25.9,1617.9,Anderson R.
+146,Xiyu Wang,18.2,1580.6,1494.9,1462.4,1379.7,2019 Roland Garros Qual,18.2,1674.9,Wang X.
+147,Marie Bouzkova,20.9,1579.3,1567,1319.4,1425.8,2019 Miami Qual,20.7,1658.8,Bouzkova M.
+148,Kurumi Nara,27.5,1578.2,1520.2,1478.4,1341.3,2015 Hobart SF,23,1801.8,Nara K.
+149,Nao Hibino,24.6,1576.5,1558.8,1372,1367.9,2015 Tianjin R32,20.9,1725.2,Hibino N.
+150,Vera Lapko,20.7,1575.2,1565.9,1571.4,1425.9,2018 Roland Garros Qual,19.7,1797.3,Lapko V.
+151,Tereza Smitkova,24.7,1572.9,1535.6,1350.6,1434.3,2015 Australian Open R64,20.3,1773.2,Smitkova T.
+152,Lucie Hradecka,34.1,1569.6,1506.9,1498.5,1253.2,2011 Strasbourg QF,26,1917.3,Hradecka L.
+153,Giulia Gatto Monticone,31.6,1569.3,1377.9,1476.5,1405.1,2019 Nottingham Qual,31.6,1556.1,Monticone G.G.
+154,Tereza Martincova,24.6,1568,1537.6,1343.2,1333.7,2019 Budapest Qual,24.3,1618,Martincova T.
+155,Misaki Doi,28.1,1567.4,1558.3,1386,1467.5,2016 Stanford QF,25.2,1805.4,Doi M.
+156,Rebecca Sramkova,22.7,1567.3,1355.1,1503.5,1463.7,2016 Tashkent Qual,19.9,1668.2,Sramkova R.
+157,Barbara Haas,23.2,1566.1,1387.7,1513.7,1479.8,2016 Saint Malo $50K R16,20.5,1605.1,Haas B.
+158,Maryna Zanevska,25.7,1565.7,1523.4,1491.6,1319.5,2016 Limoges QF,23.2,1716.9,Zanevska M.
+159,Ying Ying Duan,29.9,1562.2,1512.2,1079.4,1452.3,2017 Australian Open R32,27.6,1694.6,Duan Y.Y.
+160,Ludmilla Samsonova,20.6,1558.1,1472,1429.5,1383.4,2019 Dubai Qual,20.3,1661.7,Samsonova L.
+161,Ann Li,19,1556.8,1416.8,1455.6,1332.2,2019 W100 Bonita Springs FL F,18.9,1609.2,Li A.
+162,Sofya Zhuk,19.5,1555.7,1491,1478,1441.4,2018 Indian Wells R32,18.3,1757.8,Zhuk S.
+163,Priscilla Hon,21.1,1553.1,1525.3,1274,1319.1,2019 Sydney R16,20.7,1601.5,Hon P.
+164,Harriet Dart,22.9,1553,1523.3,1218.8,1417.8,2019 W60 Croissy Beaubourg SF,22.7,1647.8,Dart H.
+165,Evgeniya Rodina,30.4,1549.7,1441,1422.4,1573.3,2009 Dothan AL 75K SF,20.2,1743.1,Rodina E.
+166,Cagla Buyukakcay,29.7,1548.6,1455.1,1490.7,1140.4,2016 Roland Garros R64,26.7,1707.8,Buyukakcay C.
+167,Sabine Lisicki,29.7,1546.9,1539.3,1429.6,1570.4,2012 Australian Open R16,22.3,2019.9,Lisicki S.
+168,Martina Trevisan,25.6,1543.7,1412.7,1472.3,1270.5,2018 US Open Qual,24.8,1680.1,Trevisan M.
+169,Magdalena Frech,21.5,1543.1,1443.8,1442.5,1408.4,2018 Nottingham R16,20.5,1653.9,Frech M.
+170,Irina Maria Bara,24.2,1541.2,1256.7,1507.8,1301.8,2018 Bucharest R16,23.3,1614.6,Bara I.M.
+171,Arantxa Rus,28.5,1535.5,1485.2,1425.4,1385.1,2012 Biarritz 100K SF,21.6,1741,Rus A.
+172,Dalila Jakupovic,28.2,1533.6,1522.4,1370.1,1471.2,2018 Birmingham QF,27.2,1705,Jakupovic D.
+173,Paula Ormaechea,26.7,1529.9,1335.1,1484.7,1221.9,2013 Roland Garros R32,20.7,1756.9,Ormaechea P.
+174,Danielle Lao,28.1,1529.2,1465.7,1200.6,1387.5,2018 Las Vegas NV $80K QF,27.4,1659.4,Lao D.
+175,Bibiane Schoofs,31.1,1528,1425.2,1381.8,1470.9,2012 Versmold 50K SF,24.1,1624.8,Schoofs B.
+176,Katie Swan,20.2,1527.5,1402.6,1572.5,1275.8,2019 W100 Ilkley R16,20.2,1551.3,Swan K.
+177,Conny Perrin,28.5,1526.3,1414.5,1421.3,1454.1,2018 US Open Qual,27.7,1552.2,Perrin C.
+178,Georgina Garcia Perez,27.1,1518.9,1526.1,1416.1,1351.1,2018 Zagreb $60K QF,26.3,1643.1,Perez G.G.
+179,Kristie Ahn,27,1514.8,1490.5,1394.4,1363.7,2017 Wimbledon Qual,25,1731.4,Ahn K.
+180,Laura Ioana Andrei,31,1514.8,1441.4,1479.5,1289.0,2019 Nurnberg R16,31,1540.4,Andrei L.I.
+181,Alexandra Cadantu,29.1,1512.5,1362.7,1485.1,1180.4,2012 Olomouc 100K F,22.2,1753.4,Cadantu A.
+182,Dalma Galfi,20.8,1512.1,1410,1449.8,1291.3,2016 Dubai $100K R16,18.3,1567.2,Galfi D.
+183,Richel Hogenkamp,27.1,1511,1416.1,1478.6,1329.3,2017 's Hertogenbosch R16,25.2,1721.1,Hogenkamp R.
+184,Tamara Korpatsch,24.1,1510.9,1321,1539.8,1271.9,2017 Budapest R16,21.8,1636,Korpatsch T.
+185,Anhelina Kalinina,22.4,1510.4,1425.9,1463.5,1201.0,2015 Lexington KY $50K QF,18.5,1592.8,Kalinina A.
+186,Varvara Flink,22.5,1504.6,1422.6,1474.6,1455.7,2016 Scottsdale AZ $50K QF,19.9,1620.1,Flink V.
+187,Nina Stojanovic,22.9,1504.5,1383.1,1457.6,1312.7,2017 Shenzhen QF,20.4,1659.7,Stojanovic N.
+188,Silvia Soler Espinosa,31.4,1499.8,1367.3,1443.5,1300.6,2012 Wimbledon R64,24.6,1794.3,Espinosa S.S.
+189,Irina Khromacheva,23.9,1496.3,1447.5,1406.9,1344.2,2016 Biarritz $100K QF,21.3,1665.3,Khromacheva I.
+190,Xinyun Han,29,1489.3,1470.6,1365.3,1141.7,2010 Ningbo 100K SF,20.3,1642.9,Han X.
+191,Katy Dunne,24.3,1488.9,1395.9,1157.5,1383.4,2019 W100 Surbiton QF,24.3,1497.9,Dunne K.
+192,Valentini Grammatikopoulou,22.3,1488.6,1401.9,1411.5,1346.2,2018 Fed Cup G2 PPO,21.2,1571.1,Grammatikopoulou V.
+193,En Shuo Liang,18.7,1488.3,1468.4,1295.7,1344.8,2019 W60 Fukuoka QF,18.6,1570.3,Liang E.S.
+194,Olga Danilovic,18.4,1487,1408.4,1482.6,1298.5,2018 US Open Qual,17.6,1784.6,Danilovic O.
+195,Jaimee Fourlis,19.7,1481,1220.4,1511.3,1210.4,2019 W60 Barcelona SF,19.7,1501,Fourlis J.
+196,Daniela Seguel,26.6,1480.6,1338.6,1424.8,1308.9,2018 Cagnes Sur Mer $100K QF,25.5,1587.8,Seguel D.
+197,Renata Zarazua,21.7,1479.9,1404.8,1375.6,1260.4,2019 Guadalajara QF,21.4,1529.4,Zarazua R.
+198,Jessika Ponchet,22.7,1479,1484.1,1149.9,1306.3,2019 W60 Shrewsbury R16,22.4,1593.9,Ponchet J.
+199,Chloe Paquet,24.9,1476.5,1268.9,1376.5,1388.9,2019 Strasbourg SF,24.9,1506.3,Paquet C.
+200,Katherine Sebov,20.4,1474.5,1453.9,1126.4,1409.2,2017 Charleston SC $60K R32,18.3,1538.7,Sebov K.
+201,Kayla Day,19.6,1473.9,1454.4,1345.2,1278.3,2016 Scottsdale AZ $50K SF,17.1,1707.2,Day K.
+202,Viktoriya Tomova,24.3,1470.1,1428.5,1279.7,1497.1,2016 Budapest $100K F,21.4,1668.9,Tomova V.
+203,Destanee Aiava,19.1,1469.2,1434.5,1306.1,1330.8,2018 Canberra $60K F,17.9,1576,Aiava D.
+204,Kimberley Zimmermann,23.6,1469.1,1399.9,1461.4,1304.1,2018 Biarritz $80K QF,22.8,1552,Zimmermann K.
+205,Julia Glushko,29.4,1467.2,1425,1332,1274.2,2013 US Open R32,23.6,1661.6,Glushko J.
+206,Katarina Zavatska,19.4,1466.8,1259.5,1437.9,1349.7,2017 Dunakeszi $60K F,17.6,1570.2,Zavatska K.
+207,Gabriela Dabrowski,27.2,1464.9,1381.8,1387.8,1326.6,2013 Waterloo 50K F,21.2,1580.2,Dabrowski G.
+208,Louisa Chirico,23.1,1464.6,1359.1,1450,1233.9,2016 Madrid SF,20,1779.5,Chirico L.
+209,Danka Kovinic,24.6,1461.6,1384,1430.6,1166.0,2016 Istanbul F,21.4,1786.2,Kovinic D.
+210,Martina Di Giuseppe,28.3,1458.6,1139.6,1357.5,1445.0,2019 W100 Ilkley R16,28.3,1469.1,Giuseppe M.D.
+211,Caroline Dolehide,20.8,1452.4,1352.4,1445.3,1328.0,2018 Roland Garros R64,19.7,1712.2,Dolehide C.
+212,Kai Lin Zhang,29.3,1447.9,1358.9,1406.4,1394.1,2015 Nanjing $100K SF,25.7,1635.9,Zhang K.L.
+213,Sesil Karatantcheva,29.8,1446.4,1410,1343.4,1332.4,2005 French Open QF,15.8,1969,Karatantcheva S.
+214,Kathinka Von Deichmann,25,1444.5,1386.4,1390,1283.8,2018 Saint Malo $60K QF,24.3,1582,Deichmann K.V.
+215,Jana Fett,22.6,1444.1,1332,1386.8,1400.0,2017 Luxembourg R32,21,1740.4,Fett J.
+216,Valentyna Ivakhnenko,25.9,1442.1,1302,1407.9,1249.9,2016 St. Petersburg Qual,22.6,1505.5,Ivakhnenko V.
+217,Naiktha Bains,21.5,1440.7,1346.4,1365.2,1243.0,2019 W60 La Bisbal D'Emporda QF,21.4,1462,Bains N.
+218,Fanny Stollar,20.6,1439.9,1373.3,1434.9,1273.5,2018 Hong Kong R32,19.9,1641.1,Stollar F.
+219,Fangzhou Liu,23.5,1436.8,1429.5,1098.4,1245.5,2015 Quanzhou $50K SF,19.3,1620.8,Liu F.
+220,Naomi Broady,29.3,1431.6,1377.2,1280.9,1357.3,2016 Kuala Lumpur SF,26,1765.7,Broady N.
+221,Isabella Shinikova,27.6,1428.7,1366.1,1306.5,1156.9,2016 Istanbul $50K QF,24.5,1570.4,Shinikova I.
+222,Kimberly Birrell,21.1,1428.3,1477.7,1197,1197.9,2019 W60 Launceston R16,20.8,1597,Birrell K.
+223,Ekaterine Gorgodze,27.5,1428.1,1264.6,1418.4,-,2018 Biarritz $80K R16,26.8,1557.1,Gorgodze E.
+224,Claire Liu,19.1,1427.5,1372,1360.9,1457.6,2018 Bucharest R16,18.1,1635,Liu C.
+225,Ankita Raina,26.4,1417.2,1429.3,1249.2,1223.6,2018 Luan $60K QF,25.3,1471.3,Raina A.
+226,Shilin Xu,21.4,1413.1,1292.6,1494.6,1269.2,2019 Australian Open Qual,21,1464.5,Xu S.
+227,Arina Rodionova,29.5,1412.3,1417.4,1161.1,1380.3,2017 Nanchang QF,27.6,1612.6,Rodionova A.
+228,Reka Luca Jani,27.9,1411.4,1223.5,1386.3,1237.3,2011 Telavi 50K R32,20.2,1519.4,Jani R.L.
+229,Fang Ying Xun,24.3,1408.4,1376.9,1203,1350.0,2018 Jinan $60K SF,23.6,1471.7,Xun F.Y.
+230,Kaylah Mcphee,21.4,1408.1,1269.4,1397.9,1250.2,2019 W60 Kurume SF,21.3,1464,Mcphee K.
+231,Tereza Mrdeza,28.6,1405.5,1285.6,1374.9,1113.6,2013 Monterrey R16,22.4,1655.5,Mrdeza T.
+232,Jamie Loeb,24.3,1404.2,1451.9,1270.4,1269.4,2017 Indian Wells Qual,22,1619.6,Loeb J.
+233,Jia Jing Lu,29.5,1403.6,1380.8,1146,1264.6,2018 Shenzhen $100K R16,29,1455.5,Lu J.J.
+234,Sabina Sharipova,24.7,1403.2,1359.2,1346.4,1473.4,2018 Astana $80K F,23.9,1578.8,Sharipova S.
+235,Ellen Perez,23.7,1403.2,1362.1,1290,1260.8,2018 Bendigo $60K F,23,1522.5,Perez E.
+236,Mayo Hibi,23.2,1400.9,1298.7,1118.4,1417.3,2013 Las Vegas NV 50K SF,17.5,1632,Hibi M.
+237,Lizette Cabrera,21.5,1398.5,1368.8,1110.7,1392.0,2017 Taipei QF,19.9,1554.9,Cabrera L.
+238,Elitsa Kostova,29.1,1396.2,1344.8,1332.2,1268.4,2016 Stanford R32,26.3,1548.5,Kostova E.
+239,Su Jeong Jang,24.1,1386.7,1376.6,1321.5,1207.5,2017 Quanzhou $60K SF,22,1589.4,Jang S.J.
+240,Olivia Rogowska,28,1382.3,1430.5,1200.7,1251.0,2014 Carson CA 50K R16,23.1,1534.8,Rogowska O.
+241,Zoe Hives,22.6,1382.2,1495.7,1207.5,1258.3,2019 W60 Burnie R16,22.2,1596.9,Hives Z.
+242,Andrea Gamiz,26.6,1381.3,1401.5,1282.1,1350.0,2016 Acapulco Qual,23.3,1581.2,Gamiz A.
+243,Anna Zaja,28,1379.5,1249.7,1355.8,1369.8,2018 Hechingen $60K SF,27.1,1527.1,Zaja A.
+244,Amandine Hesse,26.4,1377.7,1326.8,1289.9,1258.8,2015 Victoria $50K F,22.7,1546.6,Hesse A.
+245,Valeria Savinykh,28.3,1374.6,1311.1,1309.2,1388.0,2012 Osprey FL 50K R16,21.1,1669.8,Savinykh V.
+246,Deniz Khazaniuk,24.5,1374.3,1332.4,1162.3,1273.9,2019 W100 Charleston SC R16,24.5,1416.3,Khazaniuk D.
+247,Kyoka Okamura,23.7,1373.7,1444.6,1102,1599.4,2019 W80 Gifu SF,23.6,1494.8,Okamura K.
+248,Yuxuan Zhang,24.7,1369.6,1342.2,959.9,1290.0,2013 Beijing 75K R32,18.9,1568.1,Zhang Y.
+249,Maria Sanchez,29.5,1361.7,1318.5,1199.8,1337.7,2012 Phoenix AZ 75K F,22.9,1727.8,Sanchez M.
+250,Ulrikke Eikeri,26.5,1360.9,1354.1,1266.7,-,2009 Fed Cup G3 RRB,16.3,1686.7,Eikeri U.
+251,Ayano Shimizu,21.1,1359.2,1212,1195.3,1354.7,2018 Wimbledon Qual,20.2,1464.1,Shimizu A.
+252,Dejana Radanovic,23.1,1358.8,1309.1,1277.1,1350.0,2019 Nurnberg Qual,23,1456.9,Radanovic D.
+253,Peangtarn Plipuech,26.5,1354,1280.3,1290.7,1300.8,2018 Liuzhou $60K R16,26,1386.1,Plipuech P.
+254,Deborah Chiesa,23,1353.4,1302,1333,1291.9,2018 Brescia $60K R32,22,1547.6,Chiesa D.
+255,Emina Bektas,26.1,1352.4,1205.2,1236.1,1350.0,2017 Templeton CA $60K R32,24.5,1557.6,Bektas E.
+256,Quinn Gleason,24.6,1350,1317.2,1320.5,1259.9,2019 W100 Bonita Springs FL Qual,24.5,1413.1,Gleason Q.
+257,Ashley Kratzer,20.3,1340.4,1328.2,1245.3,1350.0,2018 San Jose R16,19.5,1539.3,Kratzer A.
+258,Myrtille Georges,28.5,1327.7,1374.4,1186.8,1307.2,2016 Tunis $50K QF,25.4,1455.5,Georges M.
+259,Jovana Jaksic,25.6,1321.4,1281.8,1131.9,1394.1,2014 Aning 50K F,20.6,1619.4,Jaksic J.
+260,Asia Muhammed,28.2,1319.3,1343.5,1267.7,1214.7,2017 Launceston $60K SF,25.8,1606.5,Muhammed A.
+261,Olga Doroshina,24.9,1317.5,1272.7,1300.6,1350.0,2018 Zagreb $60K SF,24.2,1513.1,Doroshina O.
+262,Maddison Inglis,21.4,1315.3,1355.4,1194.4,1333.9,2019 W80 Gifu SF,21.3,1391.4,Inglis M.
+263,Alison Bai,29.4,1273.6,1224.7,1160.8,1302.5,2017 Canberra $60K SF,27.8,1259.6,Bai A.
+264,Abbie Myers,24.8,1271.4,1115.7,1258.4,1289.0,2018 Kurume $60K F,23.8,1473.7,Myers A.
+265,Hiroko Kuwata,28.4,1270.9,1311.7,1080.8,1122.5,2015 Bendigo $50K F,24.9,1503.3,Kuwata H.
+266,Haruka Kaji,24.6,1242.6,1262.6,1230,1267.0,2019 W60 Kyoto R16,24.4,1307.5,Kaji H.
+267,Mai Minokoshi,27.1,1152.5,1096.8,1290.6,1228.2,2018 Honolulu HI $60K QF,26.2,1353.4,Minokoshi M.
