@@ -1,0 +1,93 @@
+---
+title: "Player name lookup table"
+author: "David Selby"
+date: '2022-06-24'
+output: html_document
+---
+
+In this document we will create a lookup table for matching player names, as downloaded from the Elo ratings web site, with the names given in the submission template.
+
+```{r}
+elo_m <- read.csv('data/elo_ratings/atp22.csv')
+elo_f <- read.csv('data/elo_ratings/wta22.csv')
+template <- read.csv(file('submission-template.csv', encoding = 'UTF-8'))
+```
+
+Get the unique names in the two sources.
+
+```{r}
+elo_names <- c(elo_m$Player, elo_f$Player)
+template_names <- union(template$player1_name, template$player2_name)
+```
+
+Which names don't match up?
+
+```{r}
+template_names[!template_names %in% tolower(elo_names)]
+```
+
+Rather than do anything clever, we can just manually fix these.
+Let's first join those that match exactly (except for case).
+
+```{r, message = F}
+library(dplyr)
+lookup <- distinct(template, player = player1_name, id = player1_id, Gender) %>%
+  rbind(distinct(template, player = player2_name, id = player2_id, Gender)) %>%
+  distinct()
+
+elo_tbl <- data.frame(elo_name = elo_names,
+                      lower = tolower(elo_names))
+
+lookup <- lookup %>%
+  left_join(elo_tbl, by = c(player = 'lower'))
+```
+
+## Fuzzy string matching
+
+To save a bit of manual work, we can use fuzzy string matching, which (surprisingly, to me) is built into base R.
+
+https://statisticsglobe.com/fuzzy-matching-r
+
+```{r}
+fuzzy_match <- function(name, list, max_distance = 4) {
+  sapply(name,
+         \(x) agrep(x, list, max.distance = max_distance, value = TRUE)
+  )
+}
+
+lookup <- lookup %>%
+  mutate(fuzzy = ifelse(is.na(elo_name), fuzzy_match(player, elo_names), NA),
+         single = ifelse(lengths(fuzzy) > 1, NA, sapply(fuzzy, '[', 1)),
+         elo_name = coalesce(elo_name, single)) %>%
+  select(-single)
+```
+
+Unfortunately we can't rely on fuzzy matching for all of them because of Xinyu Wang vs. Xi Yu Wang (who are different people).
+
+```{r}
+lookup %>%
+  filter(is.na(elo_name))
+```
+Life's short. Fix them manually.
+
+```{r}
+lookup <- lookup %>%
+  mutate(elo_name = case_when(player == 'xinyu wang' ~ 'Xin Yu Wang',
+                              player == 'albert ramos-vinolas' ~ 'Albert Ramos',
+                              !is.na(elo_name) ~ elo_name,
+                              TRUE ~ NA_character_)) %>%
+  select(-fuzzy)
+```
+
+Any remaining issues?
+
+```{r}
+filter(lookup, is.na(elo_name))
+```
+
+Save to disk.
+
+```{r}
+write.csv(lookup, file('data/name_lookup.csv', encoding = 'UTF-8'),
+          row.names = FALSE)
+```
