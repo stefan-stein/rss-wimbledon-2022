@@ -1,9 +1,11 @@
 ---
 title: "Player name lookup table"
 author: "David Selby"
-date: '2022-06-24'
+date: '2022-06-25'
 output: html_document
 ---
+
+## Matching Elo names with submission names
 
 In this document we will create a lookup table for matching player names, as downloaded from the Elo ratings web site, with the names given in the submission template.
 
@@ -85,9 +87,32 @@ Any remaining issues?
 filter(lookup, is.na(elo_name))
 ```
 
+## Matching with odds names
+
+This replaces the `manualNameMatching.Rmd` document.
+
+```{r}
+library(stringr)
+# Convert name from "Firstname Lastname" to "Lastname F."
+transform_name <- function(name) {
+  # Abbreviate forename(s)
+  str_replace_all(name, '([A-Z])[a-z]+(?: |-(?![A-Z][a-z]+$))', '\\1.') %>%
+    # Reorder
+    str_replace('((?:[A-Z]\\.)+)((?:[A-Z][a-z]+-?)+)', '\\2 \\1')
+}
+```
+
+This function is vectorized so you can run it on everything at once.
+
+```{r}
+lookup$lastname_initial <- transform_name(lookup$elo_name)
+head(lookup, 10)
+```
+
 Save to disk.
 
 ```{r}
 write.csv(lookup, file('data/name_lookup.csv', encoding = 'UTF-8'),
           row.names = FALSE)
 ```
+

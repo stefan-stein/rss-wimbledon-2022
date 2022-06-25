@@ -11,7 +11,7 @@
 
 <meta name="author" content="David Selby" />
 
-<meta name="date" content="2022-06-24" />
+<meta name="date" content="2022-06-25" />
 
 <title>Player name lookup table</title>
 
@@ -361,11 +361,13 @@ pre code {
 
 <h1 class="title toc-ignore">Player name lookup table</h1>
 <h4 class="author">David Selby</h4>
-<h4 class="date">2022-06-24</h4>
+<h4 class="date">2022-06-25</h4>
 
 </div>
 
 
+<div id="matching-elo-names-with-submission-names" class="section level2">
+<h2>Matching Elo names with submission names</h2>
 <p>In this document we will create a lookup table for matching player
 names, as downloaded from the Elo ratings web site, with the names given
 in the submission template.</p>
@@ -393,6 +395,7 @@ elo_tbl &lt;- data.frame(elo_name = elo_names,
 
 lookup &lt;- lookup %&gt;%
   left_join(elo_tbl, by = c(player = &#39;lower&#39;))</code></pre>
+</div>
 <div id="fuzzy-string-matching" class="section level2">
 <h2>Fuzzy string matching</h2>
 <p>To save a bit of manual work, we can use fuzzy string matching, which
@@ -428,6 +431,33 @@ of Xinyu Wang vs. Xi Yu Wang (who are different people).</p>
 <pre class="r"><code>filter(lookup, is.na(elo_name))</code></pre>
 <pre><code>##   Gender        player id elo_name
 ## 1      M roger federer 46     &lt;NA&gt;</code></pre>
+</div>
+<div id="matching-with-odds-names" class="section level2">
+<h2>Matching with odds names</h2>
+<p>This replaces the <code>manualNameMatching.Rmd</code> document.</p>
+<pre class="r"><code>library(stringr)
+# Convert name from &quot;Firstname Lastname&quot; to &quot;Lastname F.&quot;
+transform_name &lt;- function(name) {
+  # Abbreviate forename(s)
+  str_replace_all(name, &#39;([A-Z])[a-z]+(?: |-(?![A-Z][a-z]+$))&#39;, &#39;\\1.&#39;) %&gt;%
+    # Reorder
+    str_replace(&#39;((?:[A-Z]\\.)+)((?:[A-Z][a-z]+-?)+)&#39;, &#39;\\2 \\1&#39;)
+}</code></pre>
+<p>This function is vectorized so you can run it on everything at
+once.</p>
+<pre class="r"><code>lookup$lastname_initial &lt;- transform_name(lookup$elo_name)
+head(lookup, 10)</code></pre>
+<pre><code>##    Gender             player id           elo_name lastname_initial
+## 1       W        iga swiatek  1        Iga Swiatek       Swiatek I.
+## 2       W barbora krejcikova  2 Barbora Krejcikova    Krejcikova B.
+## 3       W       paula badosa  3       Paula Badosa        Badosa P.
+## 4       W      maria sakkari  4      Maria Sakkari       Sakkari M.
+## 5       W    anett kontaveit  5    Anett Kontaveit     Kontaveit A.
+## 6       W  karolina pliskova  6  Karolina Pliskova      Pliskova K.
+## 7       W         ons jabeur  7         Ons Jabeur        Jabeur O.
+## 8       W    aryna sabalenka  8    Aryna Sabalenka     Sabalenka A.
+## 9       W   danielle collins  9   Danielle Collins       Collins D.
+## 10      W   garbiñe muguruza 10   Garbine Muguruza      Muguruza G.</code></pre>
 <p>Save to disk.</p>
 <pre class="r"><code>write.csv(lookup, file(&#39;data/name_lookup.csv&#39;, encoding = &#39;UTF-8&#39;),
           row.names = FALSE)</code></pre>
