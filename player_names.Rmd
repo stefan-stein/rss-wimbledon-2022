@@ -91,6 +91,8 @@ filter(lookup, is.na(elo_name))
 
 This replaces the `manualNameMatching.Rmd` document.
 
+The following incomprehensible regular expression converts names from "Firstname Middlename Lastname" to the format "Lastname F.M.", as used in some of the betting odds portals. There are exceptions that this won't match, of course.
+
 ```{r}
 library(stringr)
 # Convert name from "Firstname Lastname" to "Lastname F."
@@ -103,6 +105,12 @@ transform_name <- function(name) {
 ```
 
 This function is vectorized so you can run it on everything at once.
+It also handles stuff like multi-part forenames and double-barrelled surnames.
+
+```{r}
+transform_name(c('Mary-Kate Olsen', 'Xi Jin Ping', 'Joe Double-Barrelled',
+                 'John Smith', 'Two-First Two-Last'))
+```
 
 ```{r}
 lookup$lastname_initial <- transform_name(lookup$elo_name)

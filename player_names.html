@@ -435,6 +435,10 @@ of Xinyu Wang vs. Xi Yu Wang (who are different people).</p>
 <div id="matching-with-odds-names" class="section level2">
 <h2>Matching with odds names</h2>
 <p>This replaces the <code>manualNameMatching.Rmd</code> document.</p>
+<p>The following incomprehensible regular expression converts names from
+“Firstname Middlename Lastname” to the format “Lastname F.M.”, as used
+in some of the betting odds portals. There are exceptions that this
+won’t match, of course.</p>
 <pre class="r"><code>library(stringr)
 # Convert name from &quot;Firstname Lastname&quot; to &quot;Lastname F.&quot;
 transform_name &lt;- function(name) {
@@ -443,8 +447,13 @@ transform_name &lt;- function(name) {
     # Reorder
     str_replace(&#39;((?:[A-Z]\\.)+)((?:[A-Z][a-z]+-?)+)&#39;, &#39;\\2 \\1&#39;)
 }</code></pre>
-<p>This function is vectorized so you can run it on everything at
-once.</p>
+<p>This function is vectorized so you can run it on everything at once.
+It also handles stuff like multi-part forenames and double-barrelled
+surnames.</p>
+<pre class="r"><code>transform_name(c(&#39;Mary-Kate Olsen&#39;, &#39;Xi Jin Ping&#39;, &#39;Joe Double-Barrelled&#39;,
+                 &#39;John Smith&#39;, &#39;Two-First Two-Last&#39;))</code></pre>
+<pre><code>## [1] &quot;Olsen M.K.&quot;          &quot;Ping X.J.&quot;           &quot;Double-Barrelled J.&quot;
+## [4] &quot;Smith J.&quot;            &quot;Two-Last T.F.&quot;</code></pre>
 <pre class="r"><code>lookup$lastname_initial &lt;- transform_name(lookup$elo_name)
 head(lookup, 10)</code></pre>
 <pre><code>##    Gender             player id           elo_name lastname_initial
