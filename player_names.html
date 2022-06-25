@@ -467,6 +467,151 @@ head(lookup, 10)</code></pre>
 ## 8       W    aryna sabalenka  8    Aryna Sabalenka     Sabalenka A.
 ## 9       W   danielle collins  9   Danielle Collins       Collins D.
 ## 10      W   garbiñe muguruza 10   Garbine Muguruza      Muguruza G.</code></pre>
+<div id="odds-and-results" class="section level3">
+<h3>2018 odds and results</h3>
+<pre class="r"><code>result18m &lt;- read.csv(&#39;data/Men 2018.csv&#39;)
+elo18m &lt;- read.csv(&#39;data/elo_ratings/atp18.csv&#39;)</code></pre>
+<p>Let’s compare the names. Who is missing?</p>
+<pre class="r"><code>elo18m$lastname_initial &lt;- transform_name(elo18m$Player)
+result18m_names &lt;- with(result18m, union(Winner, Loser))
+
+(missing18 &lt;- setdiff(result18m_names, elo18m$lastname_initial))</code></pre>
+<pre><code>##  [1] &quot;Molleker R.&quot;        &quot;Gunneswaran P.&quot;     &quot;Bautista Agut R.&quot;  
+##  [4] &quot;Clarke J.&quot;          &quot;Norrie C.&quot;          &quot;Novak D.&quot;          
+##  [7] &quot;Mcdonald M.&quot;        &quot;Garcia-Lopez G.&quot;    &quot;Del Potro J.M.&quot;    
+## [10] &quot;Klahn B.&quot;           &quot;Schwartzman D.&quot;     &quot;Fritz T.&quot;          
+## [13] &quot;De Minaur A.&quot;       &quot;Berrettini M.&quot;      &quot;Maden Y.&quot;          
+## [16] &quot;Viola M.&quot;           &quot;Galovic V.&quot;         &quot;Bachinger M.&quot;      
+## [19] &quot;Quiroz R.&quot;          &quot;Brands D.&quot;          &quot;Mmoh M.&quot;           
+## [22] &quot;Polansky P.&quot;        &quot;Kubler J.&quot;          &quot;Broady L.&quot;         
+## [25] &quot;Smith J.P.&quot;         &quot;Travaglia S.&quot;       &quot;Barrere G.&quot;        
+## [28] &quot;Garin C.&quot;           &quot;Carballes Baena R.&quot; &quot;Bonzi B.&quot;          
+## [31] &quot;Hurkacz H.&quot;         &quot;Harrison C.&quot;        &quot;Carreno Busta P.&quot;  
+## [34] &quot;Bolt A.&quot;            &quot;Sonego L.&quot;          &quot;Duckworth J.&quot;      
+## [37] &quot;Ramos-Vinolas A.&quot;   &quot;Andreozzi G.&quot;       &quot;Jung J.&quot;</code></pre>
+<p>Can we find these with fuzzy matching?</p>
+<pre class="r"><code>fuzzy_match(missing18, elo18m$lastname_initial, max_distance = 0.2)</code></pre>
+<pre><code>## $`Molleker R.`
+## character(0)
+## 
+## $`Gunneswaran P.`
+## character(0)
+## 
+## $`Bautista Agut R.`
+## character(0)
+## 
+## $`Clarke J.`
+## character(0)
+## 
+## $`Norrie C.`
+## character(0)
+## 
+## $`Novak D.`
+## character(0)
+## 
+## $`Mcdonald M.`
+## character(0)
+## 
+## $`Garcia-Lopez G.`
+## character(0)
+## 
+## $`Del Potro J.M.`
+## character(0)
+## 
+## $`Klahn B.`
+## character(0)
+## 
+## $`Schwartzman D.`
+## [1] &quot;Schwartzman D.S.&quot;
+## 
+## $`Fritz T.`
+## [1] &quot;Fritz T.H.&quot;
+## 
+## $`De Minaur A.`
+## [1] &quot;Minaur A.D.&quot;
+## 
+## $`Berrettini M.`
+## character(0)
+## 
+## $`Maden Y.`
+## character(0)
+## 
+## $`Viola M.`
+## character(0)
+## 
+## $`Galovic V.`
+## character(0)
+## 
+## $`Bachinger M.`
+## character(0)
+## 
+## $`Quiroz R.`
+## character(0)
+## 
+## $`Brands D.`
+## character(0)
+## 
+## $`Mmoh M.`
+## character(0)
+## 
+## $`Polansky P.`
+## character(0)
+## 
+## $`Kubler J.`
+## character(0)
+## 
+## $`Broady L.`
+## character(0)
+## 
+## $`Smith J.P.`
+## character(0)
+## 
+## $`Travaglia S.`
+## character(0)
+## 
+## $`Barrere G.`
+## character(0)
+## 
+## $`Garin C.`
+## character(0)
+## 
+## $`Carballes Baena R.`
+## character(0)
+## 
+## $`Bonzi B.`
+## character(0)
+## 
+## $`Hurkacz H.`
+## character(0)
+## 
+## $`Harrison C.`
+## [1] &quot;Harrison R.&quot;
+## 
+## $`Carreno Busta P.`
+## character(0)
+## 
+## $`Bolt A.`
+## character(0)
+## 
+## $`Sonego L.`
+## character(0)
+## 
+## $`Duckworth J.`
+## character(0)
+## 
+## $`Ramos-Vinolas A.`
+## character(0)
+## 
+## $`Andreozzi G.`
+## character(0)
+## 
+## $`Jung J.`
+## [1] &quot;Chung H.&quot; &quot;Young D.&quot;</code></pre>
+<p>Some, but not all.</p>
+</div>
+</div>
+<div id="output" class="section level2">
+<h2>Output</h2>
 <p>Save to disk.</p>
 <pre class="r"><code>write.csv(lookup, file(&#39;data/name_lookup.csv&#39;, encoding = &#39;UTF-8&#39;),
           row.names = FALSE)</code></pre>

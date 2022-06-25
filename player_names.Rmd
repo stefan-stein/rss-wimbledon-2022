@@ -117,10 +117,37 @@ lookup$lastname_initial <- transform_name(lookup$elo_name)
 head(lookup, 10)
 ```
 
+### 2018 odds and results
+
+```{r}
+result18m <- read.csv('data/Men 2018.csv')
+elo18m <- read.csv('data/elo_ratings/atp18.csv')
+```
+
+Let's compare the names. Who is missing?
+
+```{r}
+elo18m$lastname_initial <- transform_name(elo18m$Player)
+result18m_names <- with(result18m, union(Winner, Loser))
+
+(missing18 <- setdiff(result18m_names, elo18m$lastname_initial))
+```
+Can we find these with fuzzy matching?
+
+```{r}
+fuzzy_match(missing18, elo18m$lastname_initial, max_distance = 0.2)
+```
+
+Some, but not all.
+
+
+## Output
+
 Save to disk.
 
 ```{r}
 write.csv(lookup, file('data/name_lookup.csv', encoding = 'UTF-8'),
           row.names = FALSE)
 ```
+
 
