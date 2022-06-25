@@ -13,7 +13,7 @@ knitr::opts_chunk$set(message = FALSE, echo = TRUE)
 ```
 
 
-```{r}
+```{r message=FALSE}
 library(tidyverse)
 library(igraph)
 library(readxl)
@@ -24,87 +24,30 @@ library(readxl)
 Odds data
 
 ```{r}
-dfm_2018 <- read_csv("data/Men 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
-  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
-  select(Winner, Loser, AvgW, AvgL)%>%
-  mutate(p_ij = 1 / AvgW,
-         p_ji = 1/ AvgL,
-         total_prob = p_ij + p_ji) %>%
-  mutate(p_ij = p_ij / total_prob,
-         p_ji = p_ji / total_prob) %>%
-  select(-total_prob) %>%
-  mutate(logit_p_ij = log(p_ij / p_ji),
-         lambda_w = 0.5*logit_p_ij,
-         lambda_l = -0.5*logit_p_ij)
+# Don't Repeat Yourself. :-)
 
-dfm_2019 <- read_csv("data/Men 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
-  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
-  select(Winner, Loser, AvgW, AvgL)%>%
-  mutate(p_ij = 1 / AvgW,
-         p_ji = 1/ AvgL,
-         total_prob = p_ij + p_ji) %>%
-  mutate(p_ij = p_ij / total_prob,
-         p_ji = p_ji / total_prob) %>%
-  select(-total_prob) %>%
-  mutate(logit_p_ij = log(p_ij / p_ji),
-         lambda_w = 0.5*logit_p_ij,
-         lambda_l = -0.5*logit_p_ij)
+transform_odds <- function(filename) {
+  read_csv(filename,
+           col_types = cols(Date = col_date(format = '%d/%m/%Y'))) %>%
+    filter(Tournament == 'Wimbledon' & Round == '1st Round') %>%
+    transmute(Winner, Loser, AvgW, AvgL,
+              p_ij = 1 / AvgW,
+              p_ji = 1 / AvgL,
+              total_prob = p_ij + p_ji) %>%
+    mutate(p_ij = p_ij / total_prob,
+           p_ji = p_ji / total_prob) %>%
+    select(-total_prob) %>%
+    mutate(logit_p_ij = log(p_ij / p_ji),
+           lambda_w = 0.5 * logit_p_ij,
+           lambda_l = -lambda_w)
+}
 
-dfm_2021 <- read_csv("data/Men 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
-  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
-  select(Winner, Loser, AvgW, AvgL)%>%
-  mutate(p_ij = 1 / AvgW,
-         p_ji = 1/ AvgL,
-         total_prob = p_ij + p_ji) %>%
-  mutate(p_ij = p_ij / total_prob,
-         p_ji = p_ji / total_prob) %>%
-  select(-total_prob) %>%
-  mutate(logit_p_ij = log(p_ij / p_ji),
-         lambda_w = 0.5*logit_p_ij,
-         lambda_l = -0.5*logit_p_ij)
-
-
-dfw_2018 <- read_csv("data/Women 2018.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
-  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
-  select(Winner, Loser, AvgW, AvgL)%>%
-  mutate(p_ij = 1 / AvgW,
-         p_ji = 1/ AvgL,
-         total_prob = p_ij + p_ji) %>%
-  mutate(p_ij = p_ij / total_prob,
-         p_ji = p_ji / total_prob) %>%
-  select(-total_prob) %>%
-  mutate(logit_p_ij = log(p_ij / p_ji),
-         lambda_w = 0.5*logit_p_ij,
-         lambda_l = -0.5*logit_p_ij)
-
-dfw_2019 <- read_csv("data/Women 2019.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
-  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
-  select(Winner, Loser, AvgW, AvgL)%>%
-  mutate(p_ij = 1 / AvgW,
-         p_ji = 1/ AvgL,
-         total_prob = p_ij + p_ji) %>%
-  mutate(p_ij = p_ij / total_prob,
-         p_ji = p_ji / total_prob) %>%
-  select(-total_prob) %>%
-  mutate(logit_p_ij = log(p_ij / p_ji),
-         lambda_w = 0.5*logit_p_ij,
-         lambda_l = -0.5*logit_p_ij)
-
-dfw_2021 <- read_csv("data/Women 2021.csv", col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
-  filter(Tournament == "Wimbledon" & Round == "1st Round")%>%
-  select(Winner, Loser, AvgW, AvgL)%>%
-  mutate(p_ij = 1 / AvgW,
-         p_ji = 1/ AvgL,
-         total_prob = p_ij + p_ji) %>%
-  mutate(p_ij = p_ij / total_prob,
-         p_ji = p_ji / total_prob) %>%
-  select(-total_prob) %>%
-  mutate(logit_p_ij = log(p_ij / p_ji),
-         lambda_w = 0.5*logit_p_ij,
-         lambda_l = -0.5*logit_p_ij)
-
-
-
+dfm_2018 <- transform_odds('data/Men 2018.csv')
+dfm_2019 <- transform_odds('data/Men 2019.csv')
+dfm_2021 <- transform_odds('data/Men 2021.csv')
+dfw_2018 <- transform_odds('data/Women 2018.csv')
+dfw_2019 <- transform_odds('data/Women 2019.csv')
+dfw_2021 <- transform_odds('data/Women 2021.csv')
 ```
 
 Elo data
