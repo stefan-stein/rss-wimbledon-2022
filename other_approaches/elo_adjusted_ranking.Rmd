@@ -249,5 +249,166 @@ results_gElo%>%
 ```
 
 
+# Optimize
+
+
+```{r}
+getLogLossFiller <- function(oddsData, eloData, testData, rankingType="Elo", filler=1200, return_full = FALSE){
+  data <- oddsData%>%
+    left_join(
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Winner" = "myName")
+    )%>%
+    rename("EloW" = rankingType, "PlayerW" = "Player")%>%
+    left_join(
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Loser" = "myName")
+    )%>%
+    rename("EloL" = rankingType, "PlayerL" = "Player")%>%
+    mutate(EloW = ifelse(is.na(EloW), filler, EloW),
+           EloL = ifelse(is.na(EloL), filler, EloL))%>%
+    mutate(d_ij = 0.5*(EloW + EloL)*log(10)/400,
+           lambda_w_a = lambda_w + d_ij,
+           lambda_l_a = lambda_l + d_ij)
+  
+  lambdas <- data%>%select(Winner, lambda_w_a)%>%rename(Player = Winner, lambda = lambda_w_a)%>%
+    rbind(data%>%select(Loser,lambda_l_a)%>%rename(Player = Loser, lambda = lambda_l_a))
+  
+  test_restults <- testData%>%
+    left_join(
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Winner" = "myName")
+    )%>%
+  rename("EloW" = rankingType, "PlayerW" = "Player")%>%
+  left_join(
+    eloData%>%select(myName, Player, all_of(rankingType)), by = c("Loser" = "myName")
+  )%>%
+  rename("EloL" = rankingType, "PlayerL" = "Player")%>%
+  rowwise()%>%
+  mutate(lambdaW = getLambda(Winner, lambdas),
+         lambdaL = getLambda(Loser, lambdas))%>%
+  mutate(elo_p_winner = exp(lambdaW) / (exp(lambdaW) + exp(lambdaL)),
+         marketLoss = -log(p_ij),
+         eloLoss = -log(elo_p_winner))%>%
+  ungroup()%>%
+  summarise(marketLL = sum(marketLoss), eloLL = sum(eloLoss), n = nrow(.))
+  if (return_full) { return(test_restults)}
+  return(test_restults%>%pull(eloLL))
+}
+```
+
+```{r}
+resultsFiller <- 
+  bind_rows(
+    getLogLossFiller(oddsData = dfm_2018, eloData = atp18_myName, testData = testm_2018, return_full = TRUE)%>%mutate(gender = "M", year = "2018"),
+    getLogLossFiller(oddsData = dfm_2019, eloData = atp19_myName, testData = testm_2019, return_full = TRUE)%>%mutate(gender = "M", year = "2019"),
+    getLogLossFiller(oddsData = dfm_2021, eloData = atp21_myName, testData = testm_2021, return_full = TRUE)%>%mutate(gender = "M", year = "2021"),
+    getLogLossFiller(oddsData = dfw_2018, eloData = wta18_myName, testData = testw_2018, return_full = TRUE)%>%mutate(gender = "W", year = "2018"),
+    getLogLossFiller(oddsData = dfw_2019, eloData = wta19_myName, testData = testw_2019, return_full = TRUE)%>%mutate(gender = "W", year = "2019"),
+    getLogLossFiller(oddsData = dfw_2021, eloData = wta21_myName, testData = testw_2021, return_full = TRUE)%>%mutate(gender = "W", year = "2021")
+  )
+
+```
+
+
+
+```{r}
+results_filler%>%
+  mutate(elo_minus_market = eloLL - marketLL)%>%
+  select(year, gender, n, marketLL, eloLL, elo_minus_market)
+```
+
+
+```{r}
+optim_2018 <- function(filler){
+  getLogLossFiller(oddsData = dfm_2018, eloData = atp18_myName, testData = testm_2018, filler = filler)
+}
+optim_2019 <- function(filler){
+  getLogLossFiller(oddsData = dfm_2019, eloData = atp19_myName, testData = testm_2019, filler = filler)
+}
+optim_2021 <- function(filler){
+  getLogLossFiller(oddsData = dfm_2021, eloData = atp21_myName, testData = testm_2021, filler = filler)
+}
+```
+
+```{r}
+res2018 <- optimize(optim_2018,interval = c(1200, 2500))
+res2019 <- optimize(optim_2019,interval = c(1200, 2500))
+res2021 <- optimize(optim_2021,interval = c(1200, 2500))
+```
+
+
+```{r}
+res2018
+```
+
+```{r}
+res2019
+```
+
+
+```{r}
+res2021
+```
+
+
+```{r}
+optiw_2018 <- function(filler){
+  getLogLossFiller(oddsData = dfw_2018, eloData = wta18_myName, testData = testw_2018, filler = filler)
+}
+optiw_2019 <- function(filler){
+  getLogLossFiller(oddsData = dfw_2019, eloData = wta19_myName, testData = testw_2019, filler = filler)
+}
+optiw_2021 <- function(filler){
+  getLogLossFiller(oddsData = dfw_2021, eloData = wta21_myName, testData = testw_2021, filler = filler)
+}
+```
+
+
+```{r}
+res2018W <- optimize(optiw_2018,interval = c(1200, 2500))
+res2019W <- optimize(optiw_2019,interval = c(1200, 2500))
+res2021W <- optimize(optiw_2021,interval = c(1200, 2500))
+```
+
+```{r}
+res2018W
+res2019W
+res2021W
+```
+
+
+
+
+# Average Elo
+
+```{r}
+avg_elo <- function(oddsData, eloData){
+  oddsData%>%
+    left_join(
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Winner" = "myName")
+    )%>%
+    rename("EloW" = rankingType, "PlayerW" = "Player")%>%
+    left_join(
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Loser" = "myName")
+    )%>%
+    rename("EloL" = rankingType, "PlayerL" = "Player")%>%
+    summarise(mean_EloW = mean(EloW, na.rm = T),
+              mean_EloL = mean(EloL, na.rm = T),
+              mean_Elo = (mean_EloW + mean_EloL)/2)
+}
+
+```
+
+
+```{r}
+bind_rows(
+  avg_elo(dfm_2018, atp18_myName)%>%mutate(gender="M", year=2018),
+  avg_elo(dfm_2019, atp19_myName)%>%mutate(gender="M", year=2019),
+  avg_elo(dfm_2021, atp21_myName)%>%mutate(gender="M", year=2021),
+  avg_elo(dfw_2018, wta18_myName)%>%mutate(gender="W", year=2018),
+  avg_elo(dfw_2019, wta19_myName)%>%mutate(gender="W", year=2019),
+  avg_elo(dfw_2021, wta21_myName)%>%mutate(gender="W", year=2021)
+)
+```
+
+
 
 

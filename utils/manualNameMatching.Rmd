@@ -315,3 +315,195 @@ missings2021 <- c(
 )%>%
   unique()
 ```
+
+
+
+
+# 2022
+
+
+```{r}
+transform_name <- function(name){
+  splitName <- str_split(name, " ")[[1]]
+  
+  lastName <- tail(splitName, n=1)%>%str_to_title()
+  firstName <- head(splitName, -1)%>%substr(start = 1, stop = 1)%>%toupper()%>%paste(".",sep = "")%>%paste(collapse = "")
+  
+  return(paste(lastName,firstName))
+}
+
+# transform odds data and get initial, unscaled lambda
+transform_odds <- function(filename) {
+  read_csv(filename) %>%
+    mutate(p_ij = 1 / odds1,
+           p_ji = 1 / odds2,
+           total_prob = p_ij + p_ji) %>%
+    mutate(p_ij = p_ij / total_prob,
+           p_ji = p_ji / total_prob,
+           logit_p_ij = log(p_ij / p_ji),
+           lambda_1 = 0.5 * logit_p_ij,
+           lambda_2 = -lambda_1)%>%
+    select(-total_prob)
+}
+
+```
+
+
+```{r}
+# Odds
+odds_men <- transform_odds("data/odds/men1.csv")
+odds_women <- transform_odds("data/odds/women1.csv")
+# Elo
+atp22 <- read_csv("data/elo_ratings/atp22.csv")%>%
+  rowwise()%>%
+  mutate(odds_name = transform_name(Player))
+wta22 <- read_csv("data/elo_ratings/wta22.csv")%>%
+  rowwise()%>%
+  mutate(odds_name = transform_name(Player))
+```
+
+```{r}
+mergedM <- odds_men%>%
+  left_join(
+    atp22%>%select(odds_name, Player, Elo), by = c("player1" = "odds_name")
+  )%>%
+  rename("elo1" = "Elo", "elo_name_1" = "Player")%>%
+  left_join(
+    atp22%>%select(odds_name, Player, Elo), by = c("player2" = "odds_name")
+  )%>%
+  rename("elo2" = "Elo", "elo_name_2" = "Player")%>%
+  select(player1, player2, elo_name_1, elo_name_2, everything())
+
+
+mergedW <- odds_women%>%
+  left_join(
+    wta22%>%select(odds_name, Player, Elo), by = c("player1" = "odds_name")
+  )%>%
+  rename("elo1" = "Elo", "elo_name_1" = "Player")%>%
+  left_join(
+    wta22%>%select(odds_name, Player, Elo), by = c("player2" = "odds_name")
+  )%>%
+  rename("elo2" = "Elo", "elo_name_2" = "Player")%>%
+  select(player1, player2, elo_name_1, elo_name_2, everything())
+```
+
+```{r}
+missingsM <- c(
+  mergedM%>%
+  filter(is.na(elo_name_1))%>%
+  pull(player1),
+   mergedM%>%
+  filter(is.na(elo_name_2))%>%
+  pull(player2)
+)%>%
+  unique()
+
+missingsW <- c(
+  mergedW%>%
+  filter(is.na(elo_name_1))%>%
+  pull(player1),
+   mergedW%>%
+  filter(is.na(elo_name_2))%>%
+  pull(player2)
+)%>%
+  unique()
+```
+
+```{r}
+atp22_adjusted <- atp22%>%
+  mutate(odds_name = case_when(
+    Player == "Alejandro Davidovich Fokina" ~ "Davidovich Fokina A.",
+    Player == "Tomas Martin Etcheverry" ~ "Etcheverry T. M.",
+    Player == "Jan Lennard Struff" ~ "Struff J-L.",
+    Player == "Tim Van Rijthoven" ~ "Van Rijthoven T.",
+    Player == "Felix Auger Aliassime" ~ "Auger-Aliassime F.",
+    Player == "Roberto Carballes Baena" ~ "Carballes Baena R.",
+    Player == "Alex De Minaur" ~ "De Minaur A.",
+    Player == "Daniel Elahi Galan" ~ "Galan Riveros D. E.",
+    Player == "Marc Andrea Huesler" ~ "Huesler M.",
+    Player == "Alexei Popyrin" ~ "Popyrin Al.",
+    Player == "Bernabe Zapata Miralles" ~ "Zapata Miralles B.",
+    Player == "Pablo Andujar" ~ "Andujar-Alba P.",
+    Player == "Soon Woo Kwon" ~ "Kwon S.",
+    Player == "Pablo Carreno Busta" ~ "Carreno-Busta P.",
+    Player == "Roberto Bautista Agut" ~ "Bautista-Agut R.",
+    Player == "Mackenzie Mcdonald" ~ "McDonald M.",
+    Player == "Chun Hsin Tseng" ~ "Tseng C. H.",
+    Player == "Botic Van De Zandschulp" ~ "Van De Zandschulp B.",
+    !is.na(odds_name) ~ odds_name
+  ))
+
+
+wta22_adjusted <- wta22%>%
+  mutate(odds_name = case_when(
+    Player == "Jodie Anna Burrage" ~ "Burrage J.",
+    Player == "Ylena In Albon" ~ "In-Albon Y.",
+    Player == "Danielle Collins" ~ "Collins D. R.",
+    Player == "Alison Van Uytvanck" ~ "Van Uytvanck A.",
+    Player == "Irina Maria Bara" ~ "Bara Irina M.",
+    Player == "Sara Sorribes Tormo" ~ "Sorribes Tormo S.",
+    Player == "Jil Teichmann" ~ "Teichmann J. B.",
+    Player == "Xin Yu Wang" ~ "Wang Xin.",
+    Player == "Yuriko Miyazaki" ~ "Miyazaki L.",
+    Player == "Beatriz Haddad Maia" ~ "Haddad Maia B.",
+    Player == "Xiyu Wang" ~ "Wang Xiy.",
+    Player == "Fernanda Contreras Gomez" ~ "Contreras Gomez F.",
+    Player == "Irina Camelia Begu" ~ "Begu I.",
+    Player == "Nastasja Mariana Schunk" ~ "Schunk N. M.",
+    Player == "Elena Gabriela Ruse" ~ "Ruse G.",
+    Player == "Nuria Parrizas Diaz" ~ "Parrizas-Diaz N.",
+    Player == "Karolina Pliskova" ~ "Pliskova Ka.",
+    Player == "Anna Karolina Schmiedlova" ~ "Schmiedlova A. K.",
+    Player == "Christina Mchale" ~ "McHale C.",
+    Player == "Daria Gavrilova" ~ "Saville D.",
+    !is.na(odds_name) ~ odds_name
+  ))
+
+
+no_elo <- c(
+  "Wickmayer Y.", "Kartal S.", "Williams S.", "Hives Z.",
+"Yanina Wickmayer (not ok)", "Sonay Kartal (not ok)", "Serena Williams (ok)", "Zoe Hives (not ok)")
+```
+
+Sanity check
+
+```{r}
+mergedM_adjusted <- odds_men%>%
+  left_join(
+    atp22_adjusted%>%select(odds_name, Player, Elo), by = c("player1" = "odds_name")
+  )%>%
+  rename("elo1" = "Elo", "elo_name_1" = "Player")%>%
+  left_join(
+    atp22_adjusted%>%select(odds_name, Player, Elo), by = c("player2" = "odds_name")
+  )%>%
+  rename("elo2" = "Elo", "elo_name_2" = "Player")%>%
+  select(player1, player2, elo_name_1, elo_name_2, everything())
+
+```
+
+
+```{r}
+mergedW_adjusted <- odds_women%>%
+  left_join(
+    wta22_adjusted%>%select(odds_name, Player, Elo), by = c("player1" = "odds_name")
+  )%>%
+  rename("elo1" = "Elo", "elo_name_1" = "Player")%>%
+  left_join(
+    wta22_adjusted%>%select(odds_name, Player, Elo), by = c("player2" = "odds_name")
+  )%>%
+  rename("elo2" = "Elo", "elo_name_2" = "Player")%>%
+  select(player1, player2, elo_name_1, elo_name_2, everything())
+```
+
+
+Save files
+
+```{r}
+write.csv(atp22_adjusted, file('data/elo_ratings/atp22_name_adjusted.csv', encoding = 'UTF-8'),
+          row.names = FALSE)
+write.csv(wta22_adjusted, file('data/elo_ratings/wta22_name_adjusted.csv', encoding = 'UTF-8'),
+          row.names = FALSE)
+```
+
+
+

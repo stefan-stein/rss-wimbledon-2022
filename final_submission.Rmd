@@ -1,0 +1,154 @@
+---
+title: "Final Submission: Elo Adjusted Ranking"
+author:
+  - Stefan Stein
+  - Ian Hamilton
+  - David A. Selby
+date: June 2022
+output:
+  html_document:
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, echo = TRUE)
+```
+
+
+```{r message=FALSE}
+library(tidyverse)
+```
+
+
+# Helper functions
+
+```{r}
+# transform odds data and get initial, unscaled lambda
+transform_odds <- function(filename) {
+  read_csv(filename) %>%
+    mutate(p_ij = 1 / odds1,
+           p_ji = 1 / odds2,
+           total_prob = p_ij + p_ji) %>%
+    mutate(p_ij = p_ij / total_prob,
+           p_ji = p_ji / total_prob,
+           logit_p_ij = log(p_ij / p_ji),
+           lambda_1 = 0.5 * logit_p_ij,
+           lambda_2 = -lambda_1)%>%
+    select(-total_prob)
+}
+
+# merge odds data and Elo data
+merge_odds_elo <- function(oddsData, eloData, filler=1200){
+  oddsData%>%
+    left_join(
+      eloData%>%select(odds_name, Player, Elo), by = c("player1" = "odds_name")
+    )%>%
+    rename("elo1" = "Elo", "elo_name_1" = "Player")%>%
+    left_join(
+      eloData%>%select(odds_name, Player, Elo), by = c("player2" = "odds_name")
+    )%>%
+    rename("elo2" = "Elo", "elo_name_2" = "Player")%>%
+    mutate(elo1 = ifelse(is.na(elo1), filler, elo1),
+           elo2 = ifelse(is.na(elo2), filler, elo2))%>%
+    mutate(d_ij = 0.5*(elo1 + elo2)*log(10)/400,
+           lambda_1_a = lambda_1 + d_ij,
+           lambda_2_a = lambda_2 + d_ij)
+  
+}
+
+avg_elo <- function(oddsData, eloData){
+  oddsData%>%
+    left_join(
+      eloData%>%select(odds_name, Player, Elo), by = c("player1" = "odds_name")
+    )%>%
+    rename("elo1" = "Elo", "elo_name_1" = "Player")%>%
+    left_join(
+      eloData%>%select(odds_name, Player, Elo), by = c("player2" = "odds_name")
+    )%>%
+    rename("elo2" = "Elo", "elo_name_2" = "Player")%>%
+    summarise(mean_elo1 = mean(elo1, na.rm = T),
+              mean_elo2 = mean(elo2, na.rm = T),
+              mean_elo = (mean_elo1 + mean_elo2)/2)
+}
+
+# match player name with lambda
+getLambda <- function(name, df){
+  lambda <- df%>%
+    filter(Player == name)%>%
+    pull(lambda)
+  if (length(lambda) == 0) {return(NA)}
+  return(lambda)
+}
+```
+
+
+# Data loading
+
+
+```{r}
+# Reference files
+name_lookup <- read_csv("data/name_lookup.csv")
+template <- read.csv(file('submission-template.csv', encoding = 'UTF-8'))
+# Odds
+odds_men <- transform_odds("data/odds/men1.csv")
+odds_women <- transform_odds("data/odds/women1.csv")
+# Elo
+atp22 <- read_csv("data/elo_ratings/atp22_name_adjusted.csv")
+wta22 <- read_csv("data/elo_ratings/wta22_name_adjusted.csv")
+```
+
+# Get average Elo of players in tournament
+
+```{r}
+avg_elo_M <- avg_elo(odds_men,atp22)%>%pull(mean_elo)
+avg_elo_W <- avg_elo(odds_women,wta22)%>%pull(mean_elo)
+```
+
+
+# Merge odds data with Elo data
+
+```{r}
+odds_elo_M <- merge_odds_elo(odds_men,atp22,filler = avg_elo_M)
+odds_elo_W <- merge_odds_elo(odds_women,wta22,filler = avg_elo_W)
+```
+
+# Get lambda lookup df
+
+```{r}
+lambdasM <- bind_rows(
+  odds_elo_M%>%select(elo_name_1, lambda_1_a)%>%rename(elo_name = elo_name_1, lambda = lambda_1_a),
+  odds_elo_M%>%select(elo_name_2, lambda_2_a)%>%rename(elo_name = elo_name_2, lambda = lambda_2_a),
+)%>%
+  filter(!is.na(elo_name))
+lambdasW <- bind_rows(
+  odds_elo_W%>%select(elo_name_1, lambda_1_a)%>%rename(elo_name = elo_name_1, lambda = lambda_1_a),
+  odds_elo_W%>%select(elo_name_2, lambda_2_a)%>%rename(elo_name = elo_name_2, lambda = lambda_2_a),
+)%>%
+  filter(!is.na(elo_name))
+
+lambdas <- rbind(lambdasM, lambdasW)
+```
+
+# Fill the template
+
+```{r}
+predictions <- template%>%
+  left_join(name_lookup%>%select(player, elo_name)%>%rename(elo_name_1 = elo_name), by = c("player1_name" = "player"))%>%
+  left_join(name_lookup%>%select(player, elo_name)%>%rename(elo_name_2 = elo_name), by = c("player2_name" = "player"))%>%
+  left_join(lambdas%>%rename(lambda_1 = lambda), by = c("elo_name_1" = "elo_name"))%>%
+  left_join(lambdas%>%rename(lambda_2 = lambda), by = c("elo_name_2" = "elo_name"))%>%
+  mutate(pi_1 = exp(lambda_1),
+         pi_2 = exp(lambda_2),
+         p_player1_win = pi_1 / (pi_1 + pi_2),
+         p_player2_win = pi_2 / (pi_1 + pi_2))%>%
+  mutate(p_player1_win = ifelse(is.na(p_player1_win), 0.5, p_player1_win),
+         p_player2_win = ifelse(is.na(p_player2_win), 0.5, p_player2_win))%>%
+  select(names(template))
+```
+
+```{r}
+write_csv(predictions, 'final_predictions.csv')
+```
+
+
+
