@@ -88,3 +88,42 @@ write.csv(wta21, 'data/elo_ratings/wta21.csv', row.names = F)
 write.csv(wta19, 'data/elo_ratings/wta19.csv', row.names = F)
 write.csv(wta18, 'data/elo_ratings/wta18.csv', row.names = F)
 ```
+
+## Odds
+
+We scrape the tables of betting odds from 
+
+- https://www.oddsportal.com/tennis/united-kingdom/atp-wimbledon/
+- https://www.oddsportal.com/tennis/united-kingdom/wta-wimbledon/
+
+Paste into Excel, then save to CSV.
+
+```{r}
+men_odds <- read.csv('data/odds/men_raw1.csv', header = F)
+women_odds <- read.csv('data/odds/women_raw1.csv', header = F)
+```
+
+```{r}
+men_odds <- men_odds %>%
+  setNames(c('time', 'pair', 'blank', 'cancelled', 'odds1', 'odds2', 'Bs')) %>%
+  filter(nchar(pair) > 0,            # skip empty / meta rows
+         nchar(cancelled) == 0) %>%  # delete cancelled matches
+  select(-blank, -cancelled, -Bs) %>%
+  tidyr::separate(pair, c('player1', 'player2'), sep = ' - ')
+```
+
+Due to cancelled matches the layout is not guaranteed to be the same for every table.
+
+```{r}
+women_odds <- women_odds %>%
+  setNames(c('time', 'pair', 'blank', 'cancelled', 'odds1', 'odds2', 'Bs')) %>%
+  filter(nchar(pair) > 0,
+         nchar(cancelled) == 0) %>%
+  select(-blank, -cancelled, -Bs) %>%
+  tidyr::separate(pair, c('player1', 'player2'), sep = ' - ')
+```
+
+```{r}
+write.csv(women_odds, 'data/odds/women1.csv', row.names = F)
+write.csv(men_odds, 'data/odds/men1.csv', row.nams = F)
+```
