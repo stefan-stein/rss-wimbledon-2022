@@ -109,7 +109,9 @@ men_odds <- men_odds %>%
   filter(nchar(pair) > 0,            # skip empty / meta rows
          nchar(cancelled) == 0) %>%  # delete cancelled matches
   select(-blank, -cancelled, -Bs) %>%
-  tidyr::separate(pair, c('player1', 'player2'), sep = ' - ')
+  # clean up code
+  tidyr::separate(pair, c('player1', 'player2'), sep = ' - ') %>%
+  mutate(across(player1:player2, ~ stringr::str_replace_all(., '\\s', ' ')))
 ```
 
 Due to cancelled matches the layout is not guaranteed to be the same for every table.
@@ -120,10 +122,11 @@ women_odds <- women_odds %>%
   filter(nchar(pair) > 0,
          nchar(cancelled) == 0) %>%
   select(-blank, -cancelled, -Bs) %>%
-  tidyr::separate(pair, c('player1', 'player2'), sep = ' - ')
+  tidyr::separate(pair, c('player1', 'player2'), sep = ' - ') %>%
+  mutate(across(player1:player2, ~ stringr::str_replace_all(., '\\s', ' ')))
 ```
 
 ```{r}
 write.csv(women_odds, 'data/odds/women1.csv', row.names = F)
-write.csv(men_odds, 'data/odds/men1.csv', row.nams = F)
+write.csv(men_odds, 'data/odds/men1.csv', row.names = F)
 ```
