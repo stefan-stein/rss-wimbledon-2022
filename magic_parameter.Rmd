@@ -1,0 +1,183 @@
+---
+title: "Magic Parameter"
+author:
+  - Stefan Stein
+date: June 2022
+output:
+  html_document:
+    df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, echo = TRUE)
+```
+
+
+```{r message=FALSE}
+library(tidyverse)
+library(igraph)
+library(readxl)
+```
+
+Odds data
+
+```{r}
+transform_odds <- function(filename) {
+  read_csv(filename,
+           col_types = cols(Date = col_date(format = '%d/%m/%Y'))) %>%
+    filter(Tournament == 'Wimbledon' & Round == '1st Round') %>%
+    transmute(Winner, Loser, AvgW, AvgL, WPts, LPts,
+              p_ij = 1 / AvgW,
+              p_ji = 1 / AvgL,
+              total_prob = p_ij + p_ji,
+              avg_Pts = (WPts + LPts)/ 2) %>%
+    mutate(p_ij = p_ij / total_prob,
+           p_ji = p_ji / total_prob,
+           logit_p_ij = log(p_ij / p_ji),
+           lambda_w = 0.5 * logit_p_ij,
+           lambda_l = -lambda_w,
+           # offset = magic_parameter*avg_Pts / mean(avg_Pts),
+           # adj_lambda_w = lambda_w + offset,
+           # adj_lambda_l = lambda_l + offset
+           )%>%
+    select(-total_prob)
+}
+
+transform_testData <- function(filename){
+  read_csv(filename, col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  filter(Tournament == "Wimbledon" & Round != "1st Round")%>%
+  select(Winner, Loser, AvgW, AvgL)%>%
+  mutate(p_ij = 1 / AvgW,
+         p_ji = 1/ AvgL,
+         total_prob = p_ij + p_ji) %>%
+  mutate(p_ij = p_ij / total_prob,
+         p_ji = p_ji / total_prob) %>%
+  select(-total_prob)
+}
+
+dfm_2018 <- transform_odds('data/wimbledon M 2018.csv')
+dfm_2019 <- transform_odds('data/wimbledon M 2019.csv')
+dfm_2021 <- transform_odds('data/wimbledon M 2021.csv')
+dfw_2018 <- transform_odds('data/wimbledon W 2018.csv')
+dfw_2019 <- transform_odds('data/wimbledon W 2019.csv')
+dfw_2021 <- transform_odds('data/wimbledon W 2021.csv')
+
+testm_2018 <- transform_testData('data/wimbledon M 2018.csv')
+testm_2019 <- transform_testData('data/wimbledon M 2019.csv')
+testm_2021 <- transform_testData('data/wimbledon M 2021.csv')
+testw_2018 <- transform_testData('data/wimbledon W 2018.csv')
+testw_2019 <- transform_testData('data/wimbledon W 2019.csv')
+testw_2021 <- transform_testData('data/wimbledon W 2021.csv')
+
+```
+
+
+
+```{r}
+getLambda <- function(name, df){
+  lambda <- df%>%
+    filter(Player == name)%>%
+    pull(lambda)
+  if (length(lambda) == 0) {return(NA)}
+  return(lambda)
+}
+```
+
+
+```{r}
+getLogLoss <- function(oddsData, testData, magic_parameter){
+  
+  data <- oddsData%>%
+    mutate(offset = magic_parameter*avg_Pts / mean(avg_Pts),
+           adj_lambda_w = lambda_w + offset,
+           adj_lambda_l = lambda_l + offset)
+  
+  
+  lambdas <- data%>%select(Winner, adj_lambda_w)%>%rename(Player = Winner, lambda = adj_lambda_w)%>%
+    rbind(data%>%select(Loser,adj_lambda_l)%>%rename(Player = Loser, lambda = adj_lambda_l))
+  
+  testData%>%
+    rowwise()%>%
+    mutate(lambdaW = getLambda(Winner, lambdas),
+           lambdaL = getLambda(Loser, lambdas))%>%
+    mutate(model_p_winner = exp(lambdaW) / (exp(lambdaW) + exp(lambdaL)),
+           marketLoss = -log(p_ij),
+           modelLoss = -log(model_p_winner))%>%
+    ungroup()%>%
+    summarise(marketLL = sum(marketLoss), modelLL = sum(modelLoss), n = nrow(.))
+}
+```
+
+
+
+```{r}
+magic_parameter <- 0.6
+results <- 
+  bind_rows(
+    getLogLoss(oddsData = dfm_2018, testData = testm_2018, magic_parameter = magic_parameter)%>%mutate(gender = "M", year = "2018"),
+    getLogLoss(oddsData = dfm_2019, testData = testm_2019,  magic_parameter = magic_parameter)%>%mutate(gender = "M", year = "2019"),
+    getLogLoss(oddsData = dfm_2021, testData = testm_2021,  magic_parameter = magic_parameter)%>%mutate(gender = "M", year = "2021"),
+    getLogLoss(oddsData = dfw_2018, testData = testw_2018,  magic_parameter = magic_parameter)%>%mutate(gender = "W", year = "2018"),
+    getLogLoss(oddsData = dfw_2019, testData = testw_2019,  magic_parameter = magic_parameter)%>%mutate(gender = "W", year = "2019"),
+    getLogLoss(oddsData = dfw_2021, testData = testw_2021,  magic_parameter = magic_parameter)%>%mutate(gender = "W", year = "2021")
+  )
+
+```
+
+
+```{r}
+results%>%
+  mutate(model_minus_market = modelLL - marketLL)%>%
+  select(year, gender, n, marketLL, modelLL, model_minus_market)
+```
+
+# Varying magic parameter
+
+```{r}
+magic_parameters <- seq(0,1,by=0.1)
+results <- tibble()
+for (magic_parameter in magic_parameters) {
+  print(magic_parameter)
+  res <- 
+  bind_rows(
+    getLogLoss(oddsData = dfm_2018, testData = testm_2018, magic_parameter = magic_parameter)%>%
+      mutate(gender = "M", year = "2018", m_param = magic_parameter),
+    getLogLoss(oddsData = dfm_2019, testData = testm_2019,  magic_parameter = magic_parameter)%>%
+      mutate(gender = "M", year = "2019", m_param = magic_parameter),
+    getLogLoss(oddsData = dfm_2021, testData = testm_2021,  magic_parameter = magic_parameter)%>%
+      mutate(gender = "M", year = "2021", m_param = magic_parameter),
+    getLogLoss(oddsData = dfw_2018, testData = testw_2018,  magic_parameter = magic_parameter)%>%
+      mutate(gender = "W", year = "2018", m_param = magic_parameter),
+    getLogLoss(oddsData = dfw_2019, testData = testw_2019,  magic_parameter = magic_parameter)%>%
+      mutate(gender = "W", year = "2019", m_param = magic_parameter),
+    getLogLoss(oddsData = dfw_2021, testData = testw_2021,  magic_parameter = magic_parameter)%>%
+      mutate(gender = "W", year = "2021", m_param = magic_parameter)
+  )
+  results <- rbind(results, res)
+}
+
+```
+
+
+```{r}
+results%>%
+  # mutate(year = as.numeric(year))%>%
+  group_by(m_param, year)%>%
+  summarise(total_market_loss = sum(marketLL),
+            total_model_loss = sum(modelLL))%>%
+  ggplot() +
+  geom_line(aes(x=m_param, y=total_model_loss, color=year)) +
+  geom_line(aes(x=m_param, y=total_market_loss, color=year))
+```
+
+
+
+```{r}
+results%>%
+  mutate(year = as.numeric(year),
+         m_param = as.factor(m_param))%>%
+  group_by(m_param, year)%>%
+  summarise(total_market_loss = sum(marketLL),
+            total_model_loss = sum(modelLL))
+```
+

@@ -55,34 +55,34 @@ Elo data
 ```{r, warning=FALSE}
 atp18_myName <- read_excel("data/elo_ratings/atp18_myName.xlsx", 
     col_types = c("numeric", "text", "text", 
-        "numeric", "text", "text", "text", 
+        "numeric", "text", "text", "numeric", 
         "text", "text", "text", "text"))
 
 atp19_myName <- read_excel("data/elo_ratings/atp2019_myname.xlsx", 
     col_types = c("numeric", "text", "text", 
-        "numeric", "text", "text", "text", 
+        "numeric", "text", "text", "numeric", 
         "text", "text", "text", "text"))
 
 atp21_myName <- read_excel("data/elo_ratings/atp21_myname.xlsx", 
     col_types = c("numeric", "text", "numeric", 
         "text", "text", "text", "text", "text", 
-        "text", "text"))
+        "numeric", "text"))
 
 
 wta18_myName <- read_excel("data/elo_ratings/wta18_myname.xlsx", 
     col_types = c("numeric", "text", "text", 
-        "numeric", "text", "text", "text", 
+        "numeric", "text", "text", "numeric", 
         "text", "text", "text", "text"))
 
 wta19_myName <- read_excel("data/elo_ratings/wta19_myname.xlsx", 
     col_types = c("numeric", "text", "text", 
-        "numeric", "text", "text", "text", 
+        "numeric", "text", "text", "numeric", 
         "text", "text", "text", "text"))
 
 wta21_myName <- read_excel("data/elo_ratings/wta21_myname.xlsx", 
     col_types = c("numeric", "text", "text", 
         "numeric", "text", "text", "text", 
-        "text", "text", "text", "text"))
+        "text", "text", "numeric", "text"))
 
 ```
 
@@ -168,37 +168,37 @@ getLambda <- function(name, df){
 
 
 ```{r}
-getLogLoss <- function(oddsData, eloData, testData){
+getLogLoss <- function(oddsData, eloData, testData, rankingType="Elo"){
   data <- oddsData%>%
     left_join(
-      eloData%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Winner" = "myName")
     )%>%
-    rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+    rename("EloW" = rankingType, "PlayerW" = "Player")%>%
     left_join(
-      eloData%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+      eloData%>%select(myName, Player, all_of(rankingType)), by = c("Loser" = "myName")
     )%>%
-    rename("EloL" = "Elo", "PlayerL" = "Player")%>%
+    rename("EloL" = rankingType, "PlayerL" = "Player")%>%
     filter(!is.na(PlayerW) & !is.na(PlayerL))%>%
     mutate(d_ij = 0.5*(EloW + EloL)*log(10)/400,
            lambda_w_a = lambda_w + d_ij,
            lambda_l_a = lambda_l + d_ij)
   
-  lambdas2018 <- data%>%select(PlayerW, lambda_w_a)%>%rename(Player = PlayerW, lambda = lambda_w_a)%>%
+  lambdas <- data%>%select(PlayerW, lambda_w_a)%>%rename(Player = PlayerW, lambda = lambda_w_a)%>%
     rbind(data%>%select(PlayerL,lambda_l_a)%>%rename(Player = PlayerL, lambda = lambda_l_a))
   
   testData%>%
     left_join(
-    eloData%>%select(myName, Player, Elo), by = c("Winner" = "myName")
+    eloData%>%select(myName, Player, all_of(rankingType)), by = c("Winner" = "myName")
   )%>%
-  rename("EloW" = "Elo", "PlayerW" = "Player")%>%
+  rename("EloW" = rankingType, "PlayerW" = "Player")%>%
   left_join(
-    eloData%>%select(myName, Player, Elo), by = c("Loser" = "myName")
+    eloData%>%select(myName, Player, all_of(rankingType)), by = c("Loser" = "myName")
   )%>%
-  rename("EloL" = "Elo", "PlayerL" = "Player")%>%
+  rename("EloL" = rankingType, "PlayerL" = "Player")%>%
   filter(!is.na(PlayerW) & !is.na(PlayerL))%>%
   rowwise()%>%
-  mutate(lambdaW = getLambda(PlayerW, lambdas2018),
-         lambdaL = getLambda(PlayerL, lambdas2018))%>%
+  mutate(lambdaW = getLambda(PlayerW, lambdas),
+         lambdaL = getLambda(PlayerL, lambdas))%>%
   filter(!is.na(lambdaW) & !is.na(lambdaL))%>%
   mutate(elo_p_winner = exp(lambdaW) / (exp(lambdaW) + exp(lambdaL)),
          marketLoss = -log(p_ij),
@@ -226,3 +226,28 @@ results%>%
   mutate(elo_minus_market = eloLL - marketLL)%>%
   select(year, gender, n, marketLL, eloLL, elo_minus_market)
 ```
+
+
+```{r}
+results_gElo <- 
+  bind_rows(
+    getLogLoss(oddsData = dfm_2018, eloData = atp18_myName, testData = testm_2018, rankingType = "Grass")%>%mutate(gender = "M", year = "2018"),
+    getLogLoss(oddsData = dfm_2019, eloData = atp19_myName, testData = testm_2019, rankingType = "Grass")%>%mutate(gender = "M", year = "2019"),
+    getLogLoss(oddsData = dfm_2021, eloData = atp21_myName, testData = testm_2021, rankingType = "gElo")%>%mutate(gender = "M", year = "2021"),
+    getLogLoss(oddsData = dfw_2018, eloData = wta18_myName, testData = testw_2018, rankingType = "Grass")%>%mutate(gender = "W", year = "2018"),
+    getLogLoss(oddsData = dfw_2019, eloData = wta19_myName, testData = testw_2019, rankingType = "Grass")%>%mutate(gender = "W", year = "2019"),
+    getLogLoss(oddsData = dfw_2021, eloData = wta21_myName, testData = testw_2021, rankingType = "gElo")%>%mutate(gender = "W", year = "2021")
+  )
+
+```
+
+
+```{r}
+results_gElo%>%
+  mutate(elo_minus_market = eloLL - marketLL)%>%
+  select(year, gender, n, marketLL, eloLL, elo_minus_market)
+```
+
+
+
+
