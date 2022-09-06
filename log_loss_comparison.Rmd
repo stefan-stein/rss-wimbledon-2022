@@ -1,0 +1,181 @@
+---
+title: "Log loss comparison"
+author: "Stefan Stein"
+date: '2022-09-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+```
+
+```{r message=FALSE}
+wimbledon_M_2022 <- read_csv("data/results/wimbledon M 2022.csv",
+                             col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  select("Date", "Winner", "Loser", "AvgW", "AvgL")
+wimbledon_W_2022 <- read_csv("data/results/wimbledon W 2022.csv",
+                             col_types = cols(Date = col_date(format = "%d/%m/%Y")))%>%
+  select("Date", "Winner", "Loser", "AvgW", "AvgL")
+name_lookup <- read_csv("data/name_lookup.csv")
+final_predictions <- read_csv("final_predictions.csv")
+```
+
+
+
+```{r}
+
+# given name of winner and loser, find our prediction
+get_our_odds <- function(winner_name, loser_name){
+  # find the row with the player pairing
+  our_preds <- 
+    final_predictions%>%
+    filter(player1_name == winner_name, player2_name == loser_name)%>%
+    pull(p_player1_win)
+  if (length(our_preds) == 0) {
+    our_preds <- 
+      final_predictions%>%
+      filter(player1_name == loser_name, player2_name == winner_name)%>%
+      pull(p_player2_win)
+  }
+  return(our_preds)
+}
+
+```
+
+
+# Take avgW as market odds
+
+```{r}
+avgW_men <- wimbledon_M_2022%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_W" = "player"), by = c("Winner" = "lastname_initial"))%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_L" = "player"), by = c("Loser" = "lastname_initial"))%>%
+  filter(!is.na(player_W), !is.na(player_L))%>%
+  mutate(avg_winner_prob = 1 / AvgW,
+         market_neg_log_prob = - log(avg_winner_prob),
+         market_log_loss = cumsum(market_neg_log_prob))%>%
+  rowwise()%>%
+  mutate(our_prob = get_our_odds(player_W, player_L))%>%
+  ungroup()%>%
+  mutate(our_neg_log_prob = - log(our_prob),
+         our_log_loss = cumsum(our_neg_log_prob))
+
+avgW_women <- wimbledon_W_2022%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_W" = "player"), by = c("Winner" = "lastname_initial"))%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_L" = "player"), by = c("Loser" = "lastname_initial"))%>%
+  filter(!is.na(player_W), !is.na(player_L))%>%
+  mutate(avg_winner_prob = 1 / AvgW,
+         market_neg_log_prob = - log(avg_winner_prob),
+         market_log_loss = cumsum(market_neg_log_prob))%>%
+  rowwise()%>%
+  mutate(our_prob = get_our_odds(player_W, player_L))%>%
+  ungroup()%>%
+  mutate(our_neg_log_prob = - log(our_prob),
+         our_log_loss = cumsum(our_neg_log_prob))
+```
+
+
+```{r}
+avgW_men%>%
+  group_by(Date)%>%
+  summarise(market_day_log_loss = sum(market_neg_log_prob),
+            our_day_log_loss = sum(our_neg_log_prob))%>%
+  mutate(market_log_loss = cumsum(market_day_log_loss),
+         our_log_loss = cumsum(our_day_log_loss))%>%
+  select(-c(market_day_log_loss,our_day_log_loss))%>%
+  pivot_longer(cols = c("market_log_loss", "our_log_loss"))%>%
+  ggplot(aes(x=Date, y=value, colour=name)) +
+  geom_line() +
+  labs(title = paste0("Comparison of our predictions with market log loss, men, ", nrow(avgW_men), "/", nrow(wimbledon_M_2022), " matches"))
+```
+
+
+
+```{r}
+avgW_women%>%
+  group_by(Date)%>%
+  summarise(market_day_log_loss = sum(market_neg_log_prob),
+            our_day_log_loss = sum(our_neg_log_prob))%>%
+  mutate(market_log_loss = cumsum(market_day_log_loss),
+         our_log_loss = cumsum(our_day_log_loss))%>%
+  select(-c(market_day_log_loss,our_day_log_loss))%>%
+  pivot_longer(cols = c("market_log_loss", "our_log_loss"))%>%
+  ggplot(aes(x=Date, y=value, colour=name)) +
+  geom_line() +
+  labs(title = paste0("Comparison of our predictions with market log loss, women, ", nrow(avgW_women), "/", nrow(wimbledon_W_2022), " matches"))
+```
+
+# Normalize avgW and avgL to get market odds
+
+```{r}
+normalized_men <- wimbledon_M_2022%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_W" = "player"), by = c("Winner" = "lastname_initial"))%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_L" = "player"), by = c("Loser" = "lastname_initial"))%>%
+  filter(!is.na(player_W), !is.na(player_L))%>%
+  mutate(avg_winner_prob = 1 / AvgW,
+         avg_loser_prob = 1 / AvgL,
+         total_prob = avg_winner_prob + avg_loser_prob,
+         market_winner_prob = avg_winner_prob / total_prob,
+         market_neg_log_prob = - log(market_winner_prob),
+         market_log_loss = cumsum(market_neg_log_prob))%>%
+  rowwise()%>%
+  mutate(our_prob = get_our_odds(player_W, player_L))%>%
+  ungroup()%>%
+  mutate(our_neg_log_prob = - log(our_prob),
+         our_log_loss = cumsum(our_neg_log_prob))
+
+normalized_women <- wimbledon_W_2022%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_W" = "player"), by = c("Winner" = "lastname_initial"))%>%
+  left_join(name_lookup%>%select(player, lastname_initial)%>%rename("player_L" = "player"), by = c("Loser" = "lastname_initial"))%>%
+  filter(!is.na(player_W), !is.na(player_L))%>%
+  mutate(avg_winner_prob = 1 / AvgW,
+         avg_loser_prob = 1 / AvgL,
+         total_prob = avg_winner_prob + avg_loser_prob,
+         market_winner_prob = avg_winner_prob / total_prob,
+         market_neg_log_prob = - log(market_winner_prob),
+         market_log_loss = cumsum(market_neg_log_prob))%>%
+  rowwise()%>%
+  mutate(our_prob = get_our_odds(player_W, player_L))%>%
+  ungroup()%>%
+  mutate(our_neg_log_prob = - log(our_prob),
+         our_log_loss = cumsum(our_neg_log_prob))
+
+```
+
+```{r}
+normalized_men%>%
+  group_by(Date)%>%
+  summarise(market_day_log_loss = sum(market_neg_log_prob),
+            our_day_log_loss = sum(our_neg_log_prob))%>%
+  mutate(market_log_loss = cumsum(market_day_log_loss),
+         our_log_loss = cumsum(our_day_log_loss))%>%
+  select(-c(market_day_log_loss,our_day_log_loss))%>%
+  pivot_longer(cols = c("market_log_loss", "our_log_loss"))%>%
+  ggplot(aes(x=Date, y=value, colour=name)) +
+  geom_line() +
+  labs(title = paste0("Comparison of our predictions with market log loss, men, ", nrow(avgW_men), "/", nrow(wimbledon_M_2022), " matches"))
+```
+
+
+```{r}
+normalized_women%>%
+  group_by(Date)%>%
+  summarise(market_day_log_loss = sum(market_neg_log_prob),
+            our_day_log_loss = sum(our_neg_log_prob))%>%
+  mutate(market_log_loss = cumsum(market_day_log_loss),
+         our_log_loss = cumsum(our_day_log_loss))%>%
+  select(-c(market_day_log_loss,our_day_log_loss))%>%
+  pivot_longer(cols = c("market_log_loss", "our_log_loss"))%>%
+  ggplot(aes(x=Date, y=value, colour=name)) +
+  geom_line() +
+  labs(title = paste0("Comparison of our predictions with market log loss, women, ", nrow(avgW_women), "/", nrow(wimbledon_W_2022), " matches"))
+```
+```
+
+
+
+
+
+
+
